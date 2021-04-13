@@ -1,0 +1,270 @@
+﻿<Window x:Class="Crypt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:vm="clr-namespace:Crypt.ViewModel"
+        xmlns:model="clr-namespace:Crypt.Model"
+        xmlns:local="clr-namespace:Crypt"
+        mc:Ignorable="d"
+        Title="WannaCrypt" Height="925" Width="800"
+        WindowStyle="ToolWindow" Background="Gray"
+        
+        FontSize="14" FontFamily="Roboto" Foreground="#FFBFBFBF">
+    <Window.Resources>
+        <vm:MainViewModel x:Key="MainVM"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource MainVM}" Background="#4d4d4d">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Title Row -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <materialDesign:Card Grid.Column="0"
+                materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                 materialDesign:ShadowAssist.ShadowEdges="Bottom, Right"
+                                 Padding="5" Margin="5" Background="#282828">
+                <StackPanel>
+                    <Rectangle Height="5" Fill="IndianRed" Margin="30,5,120,0"/>
+                    <Label Grid.Column="1" Content="WannaCrypt" 
+                       FontSize="30" FontWeight="Bold" HorizontalAlignment="Center"
+                       FontFamily="Copperplate Gothic Bold" Foreground="#FFBFBFBF"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Grid.Column="0" Fill="IndianRed" Margin="5,0,5,0"/>
+                        <Label Grid.Column="1" Foreground="#FFBFBFBF">
+                            Welcome to my cryptography program!
+                        </Label>
+                    </Grid>
+                    <TextBlock TextWrapping="Wrap" Margin="20,5,5,5" TextAlignment="Justify"
+                               Foreground="#FFBFBFBF">
+                    You can 
+                    <Run Text="encrypt" Foreground="IndianRed"/>
+                    and 
+                    <Run Text="decrypt" Foreground="IndianRed"/>
+                    messages and binary files here with the help of this magnificent and convenient GUI.
+                    Just simply configure the program on the right, provide a message or a
+                    file and hit the encrypt button! :)
+                    </TextBlock>
+                    <Rectangle Height="5" Fill="IndianRed" Margin="140,5,30,0"/>
+                </StackPanel>
+            </materialDesign:Card>
+            <Rectangle Grid.Column="1" Fill="IndianRed" Margin="0,20,5,75"/>
+            <Rectangle Grid.Column="2" Fill="IndianRed" Margin="5,80,0,10"/>
+            <StackPanel Grid.Column="3">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                     Padding="5" Margin="5" Background="#282828">
+                    <StackPanel>
+                        <Rectangle Height="5" Fill="IndianRed" Margin="125,5,60,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CogOutline" Foreground="#FFBFBFBF"
+                                                 VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center"
+                                                 Width="25" Height="25"/>
+                            <Label Grid.Column="1" Content="Configuration" Margin="20,0,0,0"
+                           FontSize="20" FontWeight="Bold" HorizontalAlignment="Left"
+                           FontFamily="Calibri" Foreground="#FFBFBFBF"/>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Width="390">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CodeBrackets" Width="20" Height="20"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"
+                                                     Margin="10,0,0,0" Foreground="IndianRed"/>
+                            <Label Content="AES settings :" Margin="10,0,0,0"
+                                   FontWeight="Bold" Foreground="#FFBFBFBF"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="25,0,0,0">
+                            <Label Content="Key size :" Foreground="#FFBFBFBF"/>
+                            <ComboBox Width="100" Foreground="Black" ItemsSource="{Binding EncryptSizes}"
+                                      SelectedItem="{Binding CryptSize}"/>
+                            <Label Content="Block size :" Foreground="#FFBFBFBF"
+                                   Margin="30,0,0,0"/>
+                            <TextBox Width="80" Foreground="LightGray" Margin="5,0,0,0" 
+                                     IsEnabled="False">
+                                128 bits
+                            </TextBox>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Width="390">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CodeBrackets" Width="20" Height="20"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"
+                                                     Margin="10,0,0,0" Foreground="IndianRed"/>
+                            <Label Content="Usage settings" Margin="10,0,0,0"
+                                   FontWeight="Bold" Foreground="#FFBFBFBF"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="25,0,0,0">
+                            <Label Content="Using AES :" Margin="10,0,0,0"
+                                   Foreground="#FFBFBFBF" FontSize="14"/>
+                            <CheckBox Margin="10,0,0,0"/>
+                            <Label Content="Using DM :" Margin="10,0,0,0"
+                                   Foreground="#FFBFBFBF" FontSize="14"/>
+                            <CheckBox Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <Rectangle Height="5" Fill="IndianRed" Margin="90,10,160,0"
+                               VerticalAlignment="Bottom"/>
+            </StackPanel>
+        </Grid>
+        <!-- Encrypt row-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Encrypt Text Column -->
+            <StackPanel Grid.Column="0">
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding EncryptObject.Message}"
+                         Height="100" Width="520" Margin="25,25,25,25"
+                         VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
+                         materialDesign:HintAssist.Hint="Message"
+                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                         materialDesign:HintAssist.Background="#4d4d4d"/>
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding EncryptObject.KeyString}"
+                         Height="52" Width="520" Margin="25,5,25,5"
+                         VerticalScrollBarVisibility="Auto"
+                         materialDesign:HintAssist.Hint="Hex Key"
+                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                         materialDesign:HintAssist.Background="#4d4d4d"/>
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding EncryptObject.EncryptedMessageString}"
+                         Height="52" Width="520" Margin="25,25,25,5"
+                         VerticalScrollBarVisibility="Auto"
+                         materialDesign:HintAssist.Hint="Encrypted message"
+                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                         materialDesign:HintAssist.Background="#4d4d4d"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="125"
+                            Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Command="{Binding GenerateKeyCommand}">
+                        Generate key
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                            Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Command="{Binding EncryptCommand}">
+                        Encrypt
+                    </Button>
+                    <CheckBox x:Name="isMessageEncrypt" Content="Message" VerticalAlignment="Center"
+                      Margin="25,0,0,0" Width="100"/>
+                    <CheckBox x:Name="isFileEncrypt" Content="File" VerticalAlignment="Center"
+                      Margin="25,0,0,0" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- Encrypt File Column -->
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Provide the file you want to encrypt." 
+                           TextAlignment="Center" TextWrapping="Wrap"
+                           Margin="25,25,25,25"/>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                     Padding="5" Margin="25,5,25,25" Background="#282828">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedEncryptFile.FileName}" 
+                           TextAlignment="Center" TextWrapping="Wrap"
+                           Margin="10"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                        Click="OpenFileExplorerToBrowse" Tag="encrypt" Margin="5">
+                            Browse
+                        </Button>
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+        </Grid>
+        <Rectangle Grid.Row="2" Fill="IndianRed" Margin="325,0,150,0"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Encrypt Text Column -->
+            <StackPanel Grid.Column="0">
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DecryptObject.EncryptedMessageString}"
+                         Height="100" Width="520" Margin="25,25,25,25"
+                         VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
+                         materialDesign:HintAssist.Hint="Encrypted message"
+                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                         materialDesign:HintAssist.Background="#4d4d4d"/>
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DecryptObject.KeyString}"
+                         Height="52" Width="520" Margin="25,5,25,5"
+                         VerticalScrollBarVisibility="Auto"
+                         materialDesign:HintAssist.Hint="Hex Key"
+                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                         materialDesign:HintAssist.Background="#4d4d4d"/>
+                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Text="{Binding DecryptObject.Message}"
+                         Height="52" Width="520" Margin="25,25,25,5"
+                         VerticalScrollBarVisibility="Auto"
+                         materialDesign:HintAssist.Hint="Message"
+                         VerticalAlignment="Center" HorizontalAlignment="Left"
+                         materialDesign:HintAssist.Background="#4d4d4d"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="150"
+                            Command="{Binding CopyKeyCommand}"
+                    Margin="25,5,5,5"
+                    VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                        Copy Encrypt key
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                            Command="{Binding DecryptCommand}"
+                    Margin="25,5,5,5"
+                    VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                        Decrypt
+                    </Button>
+                    <CheckBox x:Name="isMessageDecrypt" Content="Message" VerticalAlignment="Center"
+                      Margin="25,0,0,0" Width="100"/>
+                    <CheckBox x:Name="isFileDecrypt" Content="File" VerticalAlignment="Center"
+                      Margin="25,0,0,0" Width="100"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- Encrypt File Column -->
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Provide the file you want to encrypt." 
+                           TextAlignment="Center" TextWrapping="Wrap"
+                           Margin="25,25,25,25"/>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                     Padding="5" Margin="25,5,25,25" Background="#282828">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedDecryptFile.FileName}" 
+                           TextAlignment="Center" TextWrapping="Wrap"
+                           Margin="10"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                        Click="OpenFileExplorerToBrowse" Tag="encrypt" Margin="5">
+                            Browse
+                        </Button>
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
