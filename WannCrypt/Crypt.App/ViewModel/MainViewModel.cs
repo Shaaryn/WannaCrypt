@@ -31,6 +31,8 @@ namespace Crypt.ViewModel
         private CryptService service;
         private EncryptionSize cryptSize;
 
+        private double fileEncryptionProgressValue = 0;
+        private double fileDecryptionProgressValue = 0;
         private bool isFileEncryption;
         private bool isFileDecryption;
         private string keyStringEncryption;
@@ -60,6 +62,40 @@ namespace Crypt.ViewModel
                 this.decryptTextObject.Size = value;
                 this.encryptFileObject.Size = value;
                 this.decryptFileObject.Size = value;
+            }
+        }
+
+        /// <summary>
+        /// Represents the progress of the file encryption process.
+        /// </summary>
+        public double FileEncryptionProgressValue
+        {
+            get
+            {
+                return fileEncryptionProgressValue;
+            }
+
+            set
+            {
+                fileEncryptionProgressValue = value;
+                OnPropertyChanged(nameof(FileEncryptionProgressValue));
+            }
+        }
+
+        /// <summary>
+        /// Represents the progress of the file decryption process.
+        /// </summary>
+        public double FileDecryptionProgressValue
+        {
+            get
+            {
+                return fileDecryptionProgressValue;
+            }
+
+            set
+            {
+                fileDecryptionProgressValue = value;
+                OnPropertyChanged(nameof(FileDecryptionProgressValue));
             }
         }
 
@@ -236,7 +272,7 @@ namespace Crypt.ViewModel
 
         private void RelayEncryptionCommand()
         {
-            this.EncryptCommand = new RelayCommand(() =>
+            this.EncryptCommand = new RelayCommand(async () =>
             {
                 if (!IsFileEncryption)
                 {
@@ -244,14 +280,30 @@ namespace Crypt.ViewModel
                 }
                 else
                 {
-                    this.service.ExecuteFileEncryption(this.EncryptFileObject);
+                    Progress<ProgressModel> progress = new Progress<ProgressModel>();
+                    progress.ProgressChanged += OnEncryptionProgressChanged;
+
+                    await this.service.ExecuteFileEncryptionAsync(progress, this.EncryptFileObject);
                 }
             });
         }
 
+        private void OnEncryptionProgressChanged(object sender, ProgressModel e)
+        {
+            if (e.CurrentProgress == 99)
+            {
+                // Otherwise we would never reach 100% because exact 100% is just returning from the function.
+                FileEncryptionProgressValue = 100;
+            }
+            else
+            {
+                FileEncryptionProgressValue = e.CurrentProgress;
+            }
+        }
+
         private void RelayDecryptionCommand()
         {
-            this.DecryptCommand = new RelayCommand(() =>
+            this.DecryptCommand = new RelayCommand(async () =>
             {
                 if (!IsFileEncryption)
                 {
@@ -259,9 +311,24 @@ namespace Crypt.ViewModel
                 }
                 else
                 {
-                    this.service.ExecuteFileDecryption(this.DecryptFileObject);
+                    Progress<ProgressModel> progress = new Progress<ProgressModel>();
+                    progress.ProgressChanged += OnDecryptionProgressChanged;
+
+                    await this.service.ExecuteFileDecryptionAsync(progress, this.DecryptFileObject);
                 }
             });
+        }
+
+        private void OnDecryptionProgressChanged(object sender, ProgressModel e)
+        {
+            if (e.CurrentProgress == 99)
+            {
+                FileDecryptionProgressValue = 100;
+            }
+            else
+            {
+                FileDecryptionProgressValue = e.CurrentProgress;
+            }
         }
 
         private void RelayCopyKeyCommand()

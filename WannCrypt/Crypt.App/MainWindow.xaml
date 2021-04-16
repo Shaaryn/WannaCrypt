@@ -178,10 +178,10 @@
             <StackPanel Grid.Column="1">
                 <TextBlock Text="Provide the file you want to encrypt." 
                            TextAlignment="Center" TextWrapping="Wrap"
-                           Margin="25,25,25,25"/>
+                           Margin="25,25,25,5"/>
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
                                      materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
-                                     Padding="5" Margin="25,5,25,25" Background="#282828">
+                                     Padding="5" Margin="25,25,25,5" Background="#282828">
                     <StackPanel>
                         <TextBlock Text="{Binding EncryptFileObject.FileName}" 
                            TextAlignment="Center" TextWrapping="Wrap"
@@ -189,6 +189,17 @@
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
                                 Click="OpenFileExplorerToBrowse" Tag="encrypt" Margin="5">
                             Browse
+                        </Button>
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                     Padding="5" Margin="25,5,25,25" Background="#282828">
+                    <StackPanel>
+                        <ProgressBar Value="{Binding FileEncryptionProgressValue}" Height="10" Width="125" Margin="5"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="125"
+                                Click="OpenEncryptResultDirectory" Margin="5">
+                            Open Location
                         </Button>
                     </StackPanel>
                 </materialDesign:Card>
@@ -247,7 +258,7 @@
                            Margin="25,25,25,25"/>
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
                                      materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
-                                     Padding="5" Margin="25,5,25,25" Background="#282828">
+                                     Padding="5" Margin="25,5,25,5" Background="#282828">
                     <StackPanel>
                         <TextBlock Text="{Binding DecryptFileObject.FileName}" 
                            TextAlignment="Center" TextWrapping="Wrap"
@@ -255,6 +266,17 @@
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
                                 Click="OpenFileExplorerToBrowse" Tag="decrypt" Margin="5">
                             Browse
+                        </Button>
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                     Padding="5" Margin="25,5,25,25" Background="#282828">
+                    <StackPanel>
+                        <ProgressBar Value="{Binding FileDecryptionProgressValue}" Height="10" Width="125" Margin="5"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="125"
+                                Click="OpenDecryptResultDirectory" Margin="5">
+                            Open Location
                         </Button>
                     </StackPanel>
                 </materialDesign:Card>

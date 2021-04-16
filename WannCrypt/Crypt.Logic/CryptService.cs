@@ -10,6 +10,7 @@ namespace Crypt.Logic
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using Crypt.Logic.DecryptionLogic;
     using Crypt.Logic.EncryptionLogic;
     using Crypt.Logic.Misc;
@@ -146,10 +147,12 @@ namespace Crypt.Logic
         }
 
         /// <summary>
-        /// <inheritdoc/>
+        /// <inheritdoc/>.
         /// </summary>
+        /// <param name="progressReport">Object that reports the progress of the encryption.</param>
         /// <param name="encryptFileObject">Object that contains the necessary data for file encryption.</param>
-        public void ExecuteFileEncryption(FileEncryptionObject encryptFileObject)
+        /// <returns>Awaitable asynchronous operation.</returns>
+        public async Task ExecuteFileEncryptionAsync(IProgress<ProgressModel> progressReport, FileEncryptionObject encryptFileObject)
         {
             // Read the file
             encryptFileObject.MessageByte = File.ReadAllBytes(encryptFileObject.Path);
@@ -157,8 +160,10 @@ namespace Crypt.Logic
             // Define the rounds
             encryptFileObject.Round = DefineRounds(encryptFileObject);
 
-            // Pad the message
+            // Pad the message + async model/variable
             encryptFileObject.PaddedMessage = helpMeFormat.CalculatePadding(encryptFileObject);
+            ProgressModel report = new ProgressModel();
+            report.MaximumNumberOfBlocks = encryptFileObject.PaddedMessage.Length / 16;
 
             // Calculate the expanded key
             encryptFileObject.Key = new byte[(int)encryptFileObject.Size];
@@ -181,7 +186,11 @@ namespace Crypt.Logic
 
             for (int i = 0; i < encryptFileObject.PaddedMessage.Length; i += BlockSize)
             {
-                tmpEncryptedMessage = encryption.Encrypt(encryptFileObject, i);
+                // Async operation
+                tmpEncryptedMessage = await Task.Run(() => encryption.Encrypt(encryptFileObject, i));
+                report.CurrentProgress = ((i / 16) * 100) / report.MaximumNumberOfBlocks;
+                progressReport.Report(report);
+
                 for (int j = 0; j < BlockSize; j++)
                 {
                     encryptFileObject.EncryptedMessage[j + i] = tmpEncryptedMessage[j];
@@ -200,8 +209,10 @@ namespace Crypt.Logic
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        /// <param name="progressReport">Object that repost the progress of the decryption.</param>
         /// <param name="decryptFileObject">Object that contains the necessary data for file decryption.</param>
-        public void ExecuteFileDecryption(FileDecryptionObject decryptFileObject)
+        /// <returns>Awaitable asynchronous operation.</returns>
+        public async Task ExecuteFileDecryptionAsync(IProgress<ProgressModel> progressReport, FileDecryptionObject decryptFileObject)
         {
             // Read the file
             decryptFileObject.MessageByte = File.ReadAllBytes(decryptFileObject.Path);
@@ -212,6 +223,8 @@ namespace Crypt.Logic
             // Break the file into blocksized arrays
             decryptFileObject.EncryptedPaddedMessage = new List<byte[]>();
             decryptFileObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(decryptFileObject);
+            ProgressModel report = new ProgressModel();
+            report.MaximumNumberOfBlocks = decryptFileObject.EncryptedPaddedMessage.Count;
 
             // Calculate the expanded key.
             decryptFileObject.Key = new byte[(int)decryptFileObject.Size];
@@ -231,7 +244,11 @@ namespace Crypt.Logic
 
             for (int i = 0; i < decryptFileObject.EncryptedPaddedMessage.Count; i++)
             {
-                tmpDecryptedMessageByte = decryption.Decrypt(decryptFileObject, i);
+                // Async oepration
+                tmpDecryptedMessageByte = await Task.Run(() => decryption.Decrypt(decryptFileObject, i));
+                report.CurrentProgress = (i * 100) / report.MaximumNumberOfBlocks;
+                progressReport.Report(report);
+
                 for (int j = 0; j < BlockSize; j++)
                 {
                     decryptFileObject.MessageByte[(i * BlockSize) + j] = tmpDecryptedMessageByte[j];

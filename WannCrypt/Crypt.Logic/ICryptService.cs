@@ -6,6 +6,8 @@
 
 namespace Crypt.Logic
 {
+    using System;
+    using System.Threading.Tasks;
     using Crypt.Logic.Misc;
     using Crypt.Model;
 
@@ -39,13 +41,17 @@ namespace Crypt.Logic
         /// <summary>
         /// After all necessary preparations are done, executes the encryption procedure.
         /// </summary>
+        /// <param name="progressReport">Object that reports the progress of the encryption.</param>
         /// <param name="encryptFileObject">Object that contains the necessary data for file encryption.</param>
-        void ExecuteFileEncryption(FileEncryptionObject encryptFileObject);
+        /// <returns>Awaitable asynchronous operation.</returns>
+        Task ExecuteFileEncryptionAsync(IProgress<ProgressModel> progressReport, FileEncryptionObject encryptFileObject);
 
         /// <summary>
         /// After all necessary preparations are done, executes the decryption procedure.
         /// </summary>
+        /// <param name="progressReport">Object that repost the progress of the decryption.</param>
         /// <param name="decryptFileObject">Object that contains the necessary data for file decryption.</param>
-        void ExecuteFileDecryption(FileDecryptionObject decryptFileObject);
+        /// <returns>Awaitable asynchronous operation.</returns>
+        Task ExecuteFileDecryptionAsync(IProgress<ProgressModel> progressReport, FileDecryptionObject decryptFileObject);
     }
 }

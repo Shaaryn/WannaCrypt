@@ -6,9 +6,12 @@
 
 namespace Crypt
 {
+    using System.Diagnostics;
+    using System.IO;
     using System.Windows;
     using System.Windows.Controls;
     using Crypt.ViewModel;
+    using Microsoft.Win32;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
@@ -28,11 +31,10 @@ namespace Crypt
 
         private void OpenFileExplorerToBrowse(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-
+            string path = Directory.GetCurrentDirectory() + "\\.TryOuts";
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = path;
             dlg.DefaultExt = ".png";
-
-            // dlg.Filter = "Text documents (.txt)|*.txt";
             bool? result = dlg.ShowDialog();
 
             if (result == true)
@@ -65,6 +67,22 @@ namespace Crypt
             {
                 this.mainVM.IsFileDecryption = true;
             }
+        }
+
+        private void OpenEncryptResultDirectory(object sender, RoutedEventArgs e)
+        {
+            string path = Directory.GetCurrentDirectory() + "\\EncryptedFiles";
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = path;
+            dlg.ShowDialog();
+        }
+
+        private void OpenDecryptResultDirectory(object sender, RoutedEventArgs e)
+        {
+            string path = Directory.GetCurrentDirectory() + "\\DecryptedFiles";
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = path;
+            dlg.ShowDialog();
         }
     }
 }
