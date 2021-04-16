@@ -8,13 +8,14 @@ namespace Crypt.Logic
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Text;
     using Crypt.Logic.DecryptionLogic;
     using Crypt.Logic.EncryptionLogic;
     using Crypt.Logic.Misc;
-    using Crypt.Model.TextModels;
-    using Crypt.Model.TextModels.Enum;
-    using Crypt.Model.TextModels.Interfaces;
+    using Crypt.Model;
+    using Crypt.Model.Enum;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Service provider responsible for the execution and flow control of the encryption and decryption procedures.
@@ -56,92 +57,192 @@ namespace Crypt.Logic
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        /// <param name="encryptObject"> Object that contains the necessary data for encryption.</param>
-        public void ExecuteEncryption(TextEncryptionObject encryptObject)
+        /// <param name="encryptTextObject">Object that contains the necessary data for text encryption.</param>
+        public void ExecuteTextEncryption(TextEncryptionObject encryptTextObject)
         {
             // Define the rounds
-            encryptObject.Round = DefineRounds(encryptObject);
+            encryptTextObject.Round = DefineRounds(encryptTextObject);
 
             // Bytify the text
-            encryptObject.MessageByte = new byte[encryptObject.Message.Length];
-            for (int i = 0; i < encryptObject.Message.Length; i++)
+            encryptTextObject.MessageByte = new byte[encryptTextObject.Message.Length];
+            for (int i = 0; i < encryptTextObject.Message.Length; i++)
             {
-                encryptObject.MessageByte[i] = Convert.ToByte(encryptObject.Message[i]);
+                encryptTextObject.MessageByte[i] = Convert.ToByte(encryptTextObject.Message[i]);
             }
 
             // Pad the message
-            encryptObject.PaddedMessage = helpMeFormat.CalculatePadding(encryptObject);
+            encryptTextObject.PaddedMessage = helpMeFormat.CalculatePadding(encryptTextObject);
 
             // Calculate the expanded key
-            encryptObject.Key = new byte[(int)encryptObject.Size];
+            encryptTextObject.Key = new byte[(int)encryptTextObject.Size];
             int n = 0;
-            if (encryptObject.KeyString != null)
+            if (encryptTextObject.KeyString != null)
             {
-                for (int i = 0; i < encryptObject.KeyString.Length; i += 3)
+                for (int i = 0; i < encryptTextObject.KeyString.Length; i += 3)
                 {
-                    encryptObject.Key[n] = Convert.ToByte(encryptObject.KeyString.Substring(i, 2), 16);
+                    encryptTextObject.Key[n] = Convert.ToByte(encryptTextObject.KeyString.Substring(i, 2), 16);
                     n++;
                 }
             }
 
-            encryptObject.ExpandedKey = helpMeKey.KeyExpansion(encryptObject);
+            encryptTextObject.ExpandedKey = helpMeKey.KeyExpansion(encryptTextObject);
 
             // Execute the encryption process for each block
             Encryption encryption = new Encryption();
             byte[] tmpEncryptedMessage = new byte[BlockSize];
-            encryptObject.EncryptedMessage = new byte[encryptObject.PaddedMessage.Length];
+            encryptTextObject.EncryptedMessage = new byte[encryptTextObject.PaddedMessage.Length];
 
-            for (int i = 0; i < encryptObject.PaddedMessage.Length; i += BlockSize)
+            for (int i = 0; i < encryptTextObject.PaddedMessage.Length; i += BlockSize)
             {
-                tmpEncryptedMessage = encryption.Encrypt(encryptObject, i);
+                tmpEncryptedMessage = encryption.Encrypt(encryptTextObject, i);
                 for (int j = 0; j < BlockSize; j++)
                 {
-                    encryptObject.EncryptedMessage[j + i] = tmpEncryptedMessage[j];
+                    encryptTextObject.EncryptedMessage[j + i] = tmpEncryptedMessage[j];
                 }
             }
 
-            encryptObject.EncryptedMessageString = BitConverter.ToString(encryptObject.EncryptedMessage);
+            encryptTextObject.EncryptedMessageString = BitConverter.ToString(encryptTextObject.EncryptedMessage);
         }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        /// <param name="decryptObject"> Object that contains the necessary data for decryption.</param>
-        public void ExecuteDecryption(TextDecryptionObject decryptObject)
+        /// <param name="decryptTextObject">Object that contains the necessary data for text decryption.</param>
+        public void ExecuteTextDecryption(TextDecryptionObject decryptTextObject)
         {
             // Defines the rounds
-            decryptObject.Round = DefineRounds(decryptObject);
+            decryptTextObject.Round = DefineRounds(decryptTextObject);
 
             // Break the message into blocksized arrays
-            decryptObject.EncryptedMessageCiphers = new List<byte[]>();
-            decryptObject.EncryptedMessageCiphers = helpMeFormat.CalculateArrays(decryptObject);
+            decryptTextObject.EncryptedPaddedMessage = new List<byte[]>();
+            decryptTextObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(decryptTextObject);
 
             // Calculate the expanded key.
-            decryptObject.Key = new byte[(int)decryptObject.Size];
+            decryptTextObject.Key = new byte[(int)decryptTextObject.Size];
             int k = 0;
-            for (int i = 0; i < decryptObject.KeyString.Length; i += 3)
+            for (int i = 0; i < decryptTextObject.KeyString.Length; i += 3)
             {
-                decryptObject.Key[k] = Convert.ToByte(decryptObject.KeyString.Substring(i, 2), 16);
+                decryptTextObject.Key[k] = Convert.ToByte(decryptTextObject.KeyString.Substring(i, 2), 16);
                 k++;
             }
 
-            decryptObject.ExpandedKey = helpMeKey.KeyExpansion(decryptObject);
+            decryptTextObject.ExpandedKey = helpMeKey.KeyExpansion(decryptTextObject);
 
             // Execute the decryption process for each block
             Decryption decryption = new Decryption();
             byte[] tmpDecryptedMessageByte = new byte[BlockSize];
-            decryptObject.MessageByte = new byte[BlockSize * decryptObject.EncryptedMessageCiphers.Count];
+            decryptTextObject.MessageByte = new byte[BlockSize * decryptTextObject.EncryptedPaddedMessage.Count];
 
-            for (int i = 0; i < decryptObject.EncryptedMessageCiphers.Count; i++)
+            for (int i = 0; i < decryptTextObject.EncryptedPaddedMessage.Count; i++)
             {
-                tmpDecryptedMessageByte = decryption.Decrypt(decryptObject, i);
+                tmpDecryptedMessageByte = decryption.Decrypt(decryptTextObject, i);
                 for (int j = 0; j < BlockSize; j++)
                 {
-                    decryptObject.MessageByte[(i * BlockSize) + j] = tmpDecryptedMessageByte[j];
+                    decryptTextObject.MessageByte[(i * BlockSize) + j] = tmpDecryptedMessageByte[j];
                 }
             }
 
-            decryptObject.Message = Encoding.UTF8.GetString(decryptObject.MessageByte);
+            decryptTextObject.Message = Encoding.UTF8.GetString(decryptTextObject.MessageByte);
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="encryptFileObject">Object that contains the necessary data for file encryption.</param>
+        public void ExecuteFileEncryption(FileEncryptionObject encryptFileObject)
+        {
+            // Read the file
+            encryptFileObject.MessageByte = File.ReadAllBytes(encryptFileObject.Path);
+
+            // Define the rounds
+            encryptFileObject.Round = DefineRounds(encryptFileObject);
+
+            // Pad the message
+            encryptFileObject.PaddedMessage = helpMeFormat.CalculatePadding(encryptFileObject);
+
+            // Calculate the expanded key
+            encryptFileObject.Key = new byte[(int)encryptFileObject.Size];
+            int n = 0;
+            if (encryptFileObject.KeyString != null)
+            {
+                for (int i = 0; i < encryptFileObject.KeyString.Length; i += 3)
+                {
+                    encryptFileObject.Key[n] = Convert.ToByte(encryptFileObject.KeyString.Substring(i, 2), 16);
+                    n++;
+                }
+            }
+
+            encryptFileObject.ExpandedKey = helpMeKey.KeyExpansion(encryptFileObject);
+
+            // Execute the encryption process for each block
+            Encryption encryption = new Encryption();
+            byte[] tmpEncryptedMessage = new byte[BlockSize];
+            encryptFileObject.EncryptedMessage = new byte[encryptFileObject.PaddedMessage.Length];
+
+            for (int i = 0; i < encryptFileObject.PaddedMessage.Length; i += BlockSize)
+            {
+                tmpEncryptedMessage = encryption.Encrypt(encryptFileObject, i);
+                for (int j = 0; j < BlockSize; j++)
+                {
+                    encryptFileObject.EncryptedMessage[j + i] = tmpEncryptedMessage[j];
+                }
+            }
+
+            encryptFileObject.EncryptedMessageString = BitConverter.ToString(encryptFileObject.EncryptedMessage);
+
+            string resultPath = Directory.GetCurrentDirectory() +
+                "\\EncryptedFiles" +
+                $"\\[Encrypted]{encryptFileObject.FileName}";
+
+            File.WriteAllBytes(resultPath, encryptFileObject.EncryptedMessage);
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="decryptFileObject">Object that contains the necessary data for file decryption.</param>
+        public void ExecuteFileDecryption(FileDecryptionObject decryptFileObject)
+        {
+            // Read the file
+            decryptFileObject.MessageByte = File.ReadAllBytes(decryptFileObject.Path);
+
+            // Define the rounds
+            decryptFileObject.Round = DefineRounds(decryptFileObject);
+
+            // Break the file into blocksized arrays
+            decryptFileObject.EncryptedPaddedMessage = new List<byte[]>();
+            decryptFileObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(decryptFileObject);
+
+            // Calculate the expanded key.
+            decryptFileObject.Key = new byte[(int)decryptFileObject.Size];
+            int k = 0;
+            for (int i = 0; i < decryptFileObject.KeyString.Length; i += 3)
+            {
+                decryptFileObject.Key[k] = Convert.ToByte(decryptFileObject.KeyString.Substring(i, 2), 16);
+                k++;
+            }
+
+            decryptFileObject.ExpandedKey = helpMeKey.KeyExpansion(decryptFileObject);
+
+            // Execute the decryption process for each block
+            Decryption decryption = new Decryption();
+            byte[] tmpDecryptedMessageByte = new byte[BlockSize];
+            decryptFileObject.MessageByte = new byte[BlockSize * decryptFileObject.EncryptedPaddedMessage.Count];
+
+            for (int i = 0; i < decryptFileObject.EncryptedPaddedMessage.Count; i++)
+            {
+                tmpDecryptedMessageByte = decryption.Decrypt(decryptFileObject, i);
+                for (int j = 0; j < BlockSize; j++)
+                {
+                    decryptFileObject.MessageByte[(i * BlockSize) + j] = tmpDecryptedMessageByte[j];
+                }
+            }
+
+            string resultPath = Directory.GetCurrentDirectory() +
+                "\\DecryptedFiles" +
+                $"\\[Decrypted]{decryptFileObject.FileName}";
+
+            File.WriteAllBytes(resultPath, decryptFileObject.MessageByte);
         }
 
         /// <summary>

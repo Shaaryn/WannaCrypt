@@ -6,9 +6,8 @@
 
 namespace Crypt.Logic.Misc
 {
-    using Crypt.Model.TextModels;
-    using Crypt.Model.TextModels.Enum;
-    using Crypt.Model.TextModels.Interfaces;
+    using Crypt.Model.Enum;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Interface responsible to require the necessary methods and properties in order to have a fully functioning key handler helper.
@@ -34,6 +33,6 @@ namespace Crypt.Logic.Misc
         /// </summary>
         /// <param name="encryptObject">Object containing the necessary encryption data.</param>
         /// <param name="givenSize">Determines the size of the key.</param>
-        public void GenerateRandomKey(TextEncryptionObject encryptObject, EncryptionSize givenSize);
+        public void GenerateRandomKey(IAESObject encryptObject, EncryptionSize givenSize);
     }
 }

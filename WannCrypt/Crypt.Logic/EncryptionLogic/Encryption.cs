@@ -7,7 +7,7 @@
 namespace Crypt.Logic.EncryptionLogic
 {
     using Crypt.Model;
-    using Crypt.Model.TextModels;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Class responsible for the implementation of the encryption process.
@@ -30,7 +30,7 @@ namespace Crypt.Logic.EncryptionLogic
         /// <param name="encryptObject"> Object that contains the necessary data for encryption.</param>
         /// <param name="offset">Offset varaible determining the current block that is being encrypted.</param>
         /// <returns>Array of bytes containing the currently encrypted block.</returns>
-        public byte[] Encrypt(TextEncryptionObject encryptObject, int offset)
+        public byte[] Encrypt(IEncryptionObject encryptObject, int offset)
         {
             // Copy 16 bits of the message to the state.
             this.state = new byte[BlockSize];

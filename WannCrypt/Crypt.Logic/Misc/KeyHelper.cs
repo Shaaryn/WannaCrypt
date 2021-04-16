@@ -8,9 +8,8 @@ namespace Crypt.Logic.Misc
 {
     using System;
     using Crypt.Model;
-    using Crypt.Model.TextModels;
-    using Crypt.Model.TextModels.Enum;
-    using Crypt.Model.TextModels.Interfaces;
+    using Crypt.Model.Enum;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Class responsible for the key generation and expansion.
@@ -103,9 +102,10 @@ namespace Crypt.Logic.Misc
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        /// <param name="encryptObject">Object containing the necessary encryption data.</param>
+        /// <param name="encryptTextObject">Object storing data about a text based encryption.</param>
+        /// <param name="encryptFileObject">Object storing data about a file based encryption.</param>
         /// <param name="givenSize">Determines the size of the key.</param>
-        public void GenerateRandomKey(TextEncryptionObject encryptObject, EncryptionSize givenSize)
+        public void GenerateRandomKey(IEncryptionObject encryptTextObject, IEncryptionObject encryptFileObject, EncryptionSize givenSize)
         {
             string allCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,?;.:-*_<>#&@{}/-+=";
 
@@ -116,9 +116,11 @@ namespace Crypt.Logic.Misc
                 generatedKey[i] = Convert.ToByte(allCharacters[rnd.Next(0, allCharacters.Length - 1)]);
             }
 
-            encryptObject.Key = generatedKey;
+            encryptTextObject.Key = generatedKey;
+            encryptFileObject.Key = generatedKey;
 
-            encryptObject.KeyString = BitConverter.ToString(generatedKey);
+            encryptTextObject.KeyString = BitConverter.ToString(generatedKey);
+            encryptFileObject.KeyString = BitConverter.ToString(generatedKey);
         }
     }
 }

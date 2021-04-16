@@ -4,7 +4,7 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model.TextModels.Enum
+namespace Crypt.Model.Enum
 {
     /// <summary>
     /// Enum type determining the number of rounds the encryption or decryption procedure takes.

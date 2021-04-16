@@ -4,13 +4,13 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model.TextModels.Interfaces
+namespace Crypt.Model.Interfaces
 {
     using System.ComponentModel;
-    using Crypt.Model.TextModels.Enum;
+    using Crypt.Model.Enum;
 
     /// <summary>
-    /// Object representing an AES text object.
+    /// Represents an AES encryption compatible object.
     /// </summary>
     public interface IAESObject : INotifyPropertyChanged
     {
@@ -69,8 +69,6 @@ namespace Crypt.Model.TextModels.Interfaces
         /// Determiend by the Size property.
         /// </summary>
         public RoundSize Round { get; set; }
-
-        // UI method(s)
 
         /// <summary>
         /// Method which will be used to refresh the UI.

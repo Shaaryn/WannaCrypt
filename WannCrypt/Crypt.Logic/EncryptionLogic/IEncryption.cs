@@ -6,7 +6,7 @@
 
 namespace Crypt.Logic.EncryptionLogic
 {
-    using Crypt.Model.TextModels;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Interface responsible to require the necessary methods for encryption.
@@ -19,7 +19,7 @@ namespace Crypt.Logic.EncryptionLogic
         /// <param name="encryptObject"> Object that contains the necessary data for encryption.</param>
         /// <param name="offset">Offset varaible determining the current block that is being encrypted.</param>
         /// <returns>Array of bytes containing the currently encrypted block.</returns>
-        byte[] Encrypt(TextEncryptionObject encryptObject, int offset);
+        byte[] Encrypt(IEncryptionObject encryptObject, int offset);
 
         /// <summary>
         /// Method responsible for the 'SubBytes' step.

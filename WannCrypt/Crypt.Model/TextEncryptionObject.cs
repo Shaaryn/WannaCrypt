@@ -1,20 +1,19 @@
 ﻿// |+|-------------------------YB7IQX-------------------------|+|
-// <copyright file="TextDecryptionObject.cs" company="ITSec midterm project">
+// <copyright file="TextEncryptionObject.cs" company="ITSec midterm project">
 // This code is part of my 'ITSec midterm project'. Please use it carefully.
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model.TextModels
+namespace Crypt.Model
 {
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using Crypt.Model.TextModels.Enum;
-    using Crypt.Model.TextModels.Interfaces;
+    using Crypt.Model.Enum;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
-    /// Model that is responsible of storing the data regarding a text that is being decrypted.
+    /// Model that is responsible of storing the data regarding a text that is being encrypted.
     /// </summary>
-    public sealed class TextDecryptionObject : IAESObject
+    public class TextEncryptionObject : IAESObject, IEncryptionObject
     {
         private string keyString;
         private byte[] key;
@@ -22,8 +21,8 @@ namespace Crypt.Model.TextModels
 
         private string message;
         private byte[] messageByte;
+        private byte[] paddedMessage;
         private string encryptedMessageString;
-        private List<byte[]> encryptedMessageCiphers;
         private byte[] encryptedMessage;
 
         private EncryptionSize size;
@@ -93,6 +92,15 @@ namespace Crypt.Model.TextModels
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        public byte[] PaddedMessage
+        {
+            get { return this.paddedMessage; }
+            set { this.paddedMessage = value; }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string EncryptedMessageString
         {
             get
@@ -105,15 +113,6 @@ namespace Crypt.Model.TextModels
                 this.encryptedMessageString = value;
                 this.OnPropertyChanged(nameof(this.EncryptedMessageString));
             }
-        }
-
-        /// <summary>
-        /// Used to store the encrypted message in blocksized(.Length = 16) arrays.
-        /// </summary>
-        public List<byte[]> EncryptedMessageCiphers
-        {
-            get { return this.encryptedMessageCiphers; }
-            set { this.encryptedMessageCiphers = value; }
         }
 
         /// <summary>
@@ -143,8 +142,6 @@ namespace Crypt.Model.TextModels
             set { this.round = value; }
         }
 
-        // UI configuration
-
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -158,7 +155,7 @@ namespace Crypt.Model.TextModels
         {
             if (propertyName != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

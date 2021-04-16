@@ -1,19 +1,20 @@
 ﻿// |+|-------------------------YB7IQX-------------------------|+|
-// <copyright file="TextEncryptionObject.cs" company="ITSec midterm project">
+// <copyright file="TextDecryptionObject.cs" company="ITSec midterm project">
 // This code is part of my 'ITSec midterm project'. Please use it carefully.
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model.TextModels
+namespace Crypt.Model
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
-    using Crypt.Model.TextModels.Enum;
-    using Crypt.Model.TextModels.Interfaces;
+    using Crypt.Model.Enum;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
-    /// Object that is responsible of storing the data regarding a text that is being encrypted.
+    /// Model that is responsible of storing the data regarding a text that is being decrypted.
     /// </summary>
-    public sealed class TextEncryptionObject : IAESObject
+    public class TextDecryptionObject : IAESObject, IDecryptionObject
     {
         private string keyString;
         private byte[] key;
@@ -21,8 +22,8 @@ namespace Crypt.Model.TextModels
 
         private string message;
         private byte[] messageByte;
-        private byte[] paddedMessage;
         private string encryptedMessageString;
+        private List<byte[]> encryptedPaddedMessage;
         private byte[] encryptedMessage;
 
         private EncryptionSize size;
@@ -90,15 +91,6 @@ namespace Crypt.Model.TextModels
         }
 
         /// <summary>
-        /// Message that is extended to have a (length % 16 == 0). Not used places are filled with 0s.
-        /// </summary>
-        public byte[] PaddedMessage
-        {
-            get { return this.paddedMessage; }
-            set { this.paddedMessage = value; }
-        }
-
-        /// <summary>
         /// <inheritdoc/>
         /// </summary>
         public string EncryptedMessageString
@@ -113,6 +105,15 @@ namespace Crypt.Model.TextModels
                 this.encryptedMessageString = value;
                 this.OnPropertyChanged(nameof(this.EncryptedMessageString));
             }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public List<byte[]> EncryptedPaddedMessage
+        {
+            get { return this.encryptedPaddedMessage; }
+            set { this.encryptedPaddedMessage = value; }
         }
 
         /// <summary>
@@ -142,8 +143,6 @@ namespace Crypt.Model.TextModels
             set { this.round = value; }
         }
 
-        // UI configuration
-
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -152,12 +151,12 @@ namespace Crypt.Model.TextModels
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        /// <param name="propertyName">Name of the proeprty that is changing.</param>
+        /// <param name="propertyName">Name of the property that is changing.</param>
         public void OnPropertyChanged(string propertyName)
         {
             if (propertyName != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

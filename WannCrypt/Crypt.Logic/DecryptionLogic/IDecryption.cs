@@ -6,7 +6,7 @@
 
 namespace Crypt.Logic.DecryptionLogic
 {
-    using Crypt.Model.TextModels;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Interface responsible to require the necessary methods for decryption.
@@ -19,7 +19,7 @@ namespace Crypt.Logic.DecryptionLogic
         /// <param name="decryptObject">Object that contains the necessary data for decryption.</param>
         /// <param name="offset">Offset variable determining the current block that is being decrypted.</param>
         /// <returns>Array of bytes containing the currently decrypted block.</returns>
-        byte[] Decrypt(TextDecryptionObject decryptObject, int offset);
+        byte[] Decrypt(IDecryptionObject decryptObject, int offset);
 
         /// <summary>
         /// Method responsible for the 'InvSubBytes' step.

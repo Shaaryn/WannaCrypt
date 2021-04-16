@@ -7,7 +7,7 @@
 namespace Crypt.Logic.DecryptionLogic
 {
     using Crypt.Model;
-    using Crypt.Model.TextModels;
+    using Crypt.Model.Interfaces;
 
     /// <summary>
     /// Class responsible for the implementation of the encryption process.
@@ -30,13 +30,13 @@ namespace Crypt.Logic.DecryptionLogic
         /// <param name="decryptObject">Object that contains the necessary data for decryption.</param>
         /// <param name="offset">Offset variable determining the current block that is being decrypted.</param>
         /// <returns>Array of bytes containing the currently decrypted block.</returns>
-        public byte[] Decrypt(TextDecryptionObject decryptObject, int offset)
+        public byte[] Decrypt(IDecryptionObject decryptObject, int offset)
         {
             // Copy 16 bits of the encripted message to the state.
             this.state = new byte[BlockSize];
             for (int i = 0; i < BlockSize; i++)
             {
-                state[i] = decryptObject.EncryptedMessageCiphers[offset][i];
+                state[i] = decryptObject.EncryptedPaddedMessage[offset][i];
             }
 
             // 8 because in this case : 16 * (9+1) = 144 so the key will be used from top to bottom

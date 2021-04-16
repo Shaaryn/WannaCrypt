@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:vm="clr-namespace:Crypt.ViewModel"
-        xmlns:model="clr-namespace:Crypt.Model"
-        xmlns:local="clr-namespace:Crypt"
         mc:Ignorable="d"
         Title="WannaCrypt" Height="925" Width="800"
         WindowStyle="ToolWindow" Background="Gray"
@@ -141,21 +139,21 @@
             <!-- Encrypt Text Column -->
             <StackPanel Grid.Column="0">
                 <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding EncryptObject.Message}"
+                         Text="{Binding EncryptTextObject.Message}"
                          Height="100" Width="520" Margin="25,25,25,25"
                          VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
                          materialDesign:HintAssist.Hint="Message"
                          VerticalAlignment="Center" HorizontalAlignment="Left"
                          materialDesign:HintAssist.Background="#4d4d4d"/>
                 <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding EncryptObject.KeyString}"
+                         Text="{Binding KeyStringEncryption}"
                          Height="52" Width="520" Margin="25,5,25,5"
                          VerticalScrollBarVisibility="Auto"
                          materialDesign:HintAssist.Hint="Hex Key"
                          VerticalAlignment="Center" HorizontalAlignment="Left"
                          materialDesign:HintAssist.Background="#4d4d4d"/>
                 <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding EncryptObject.EncryptedMessageString}"
+                         Text="{Binding EncryptTextObject.EncryptedMessageString}"
                          Height="52" Width="520" Margin="25,25,25,5"
                          VerticalScrollBarVisibility="Auto"
                          materialDesign:HintAssist.Hint="Encrypted message"
@@ -164,16 +162,14 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="125"
                             Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                            Command="{Binding GenerateKeyCommand}">
+                            Command="{Binding GenerateKeyCommand}" Click="DecideEncryptionType">
                         Generate key
                     </Button>
                     <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
                             Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                            Command="{Binding EncryptCommand}">
+                            Command="{Binding EncryptCommand}" Click="DecideEncryptionType">
                         Encrypt
                     </Button>
-                    <CheckBox x:Name="isMessageEncrypt" Content="Message" VerticalAlignment="Center"
-                      Margin="25,0,0,0" Width="100"/>
                     <CheckBox x:Name="isFileEncrypt" Content="File" VerticalAlignment="Center"
                       Margin="25,0,0,0" Width="100"/>
                 </StackPanel>
@@ -187,11 +183,11 @@
                                      materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
                                      Padding="5" Margin="25,5,25,25" Background="#282828">
                     <StackPanel>
-                        <TextBlock Text="{Binding SelectedEncryptFile.FileName}" 
+                        <TextBlock Text="{Binding EncryptFileObject.FileName}" 
                            TextAlignment="Center" TextWrapping="Wrap"
                            Margin="10"/>
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
-                        Click="OpenFileExplorerToBrowse" Tag="encrypt" Margin="5">
+                                Click="OpenFileExplorerToBrowse" Tag="encrypt" Margin="5">
                             Browse
                         </Button>
                     </StackPanel>
@@ -207,21 +203,21 @@
             <!-- Encrypt Text Column -->
             <StackPanel Grid.Column="0">
                 <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding DecryptObject.EncryptedMessageString}"
+                         Text="{Binding DecryptTextObject.EncryptedMessageString}"
                          Height="100" Width="520" Margin="25,25,25,25"
                          VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"
                          materialDesign:HintAssist.Hint="Encrypted message"
                          VerticalAlignment="Center" HorizontalAlignment="Left"
                          materialDesign:HintAssist.Background="#4d4d4d"/>
                 <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding DecryptObject.KeyString}"
+                         Text="{Binding KeyStringDecryption}"
                          Height="52" Width="520" Margin="25,5,25,5"
                          VerticalScrollBarVisibility="Auto"
                          materialDesign:HintAssist.Hint="Hex Key"
                          VerticalAlignment="Center" HorizontalAlignment="Left"
                          materialDesign:HintAssist.Background="#4d4d4d"/>
                 <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding DecryptObject.Message}"
+                         Text="{Binding DecryptTextObject.Message}"
                          Height="52" Width="520" Margin="25,25,25,5"
                          VerticalScrollBarVisibility="Auto"
                          materialDesign:HintAssist.Hint="Message"
@@ -235,13 +231,11 @@
                         Copy Encrypt key
                     </Button>
                     <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
-                            Command="{Binding DecryptCommand}"
+                            Command="{Binding DecryptCommand}" Click="DecideEncryptionType"
                     Margin="25,5,5,5"
                     VerticalAlignment="Bottom" HorizontalAlignment="Left">
                         Decrypt
                     </Button>
-                    <CheckBox x:Name="isMessageDecrypt" Content="Message" VerticalAlignment="Center"
-                      Margin="25,0,0,0" Width="100"/>
                     <CheckBox x:Name="isFileDecrypt" Content="File" VerticalAlignment="Center"
                       Margin="25,0,0,0" Width="100"/>
                 </StackPanel>
@@ -255,11 +249,11 @@
                                      materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
                                      Padding="5" Margin="25,5,25,25" Background="#282828">
                     <StackPanel>
-                        <TextBlock Text="{Binding SelectedDecryptFile.FileName}" 
+                        <TextBlock Text="{Binding DecryptFileObject.FileName}" 
                            TextAlignment="Center" TextWrapping="Wrap"
                            Margin="10"/>
                         <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
-                        Click="OpenFileExplorerToBrowse" Tag="encrypt" Margin="5">
+                                Click="OpenFileExplorerToBrowse" Tag="decrypt" Margin="5">
                             Browse
                         </Button>
                     </StackPanel>

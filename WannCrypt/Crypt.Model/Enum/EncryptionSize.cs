@@ -4,7 +4,7 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model.TextModels.Enum
+namespace Crypt.Model.Enum
 {
     /// <summary>
     /// Enum determining the key size of the selected encryption type.

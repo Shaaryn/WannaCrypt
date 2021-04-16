@@ -7,7 +7,7 @@
 namespace Crypt.Logic
 {
     using Crypt.Logic.Misc;
-    using Crypt.Model.TextModels;
+    using Crypt.Model;
 
     /// <summary>
     /// Interface responsible to require the necessary methods and properties in order to have a fully fucntioning crypt service.
@@ -27,13 +27,25 @@ namespace Crypt.Logic
         /// <summary>
         /// After all necessary preparations are done, executes the encryption procedure.
         /// </summary>
-        /// <param name="encryptObject"> Object that contains the necessary data for encryption.</param>
-        void ExecuteEncryption(TextEncryptionObject encryptObject);
+        /// <param name="encryptTextObject">Object that contains the necessary data for text encryption.</param>
+        void ExecuteTextEncryption(TextEncryptionObject encryptTextObject);
 
         /// <summary>
         /// After all the necessary preparations are done, executes the decryption procedure.
         /// </summary>
-        /// <param name="decryptObject"> Object that contains the necessary data for decryption.</param>
-        void ExecuteDecryption(TextDecryptionObject decryptObject);
+        /// <param name="decryptTextObject">Object that contains the necessary data for text decryption.</param>
+        void ExecuteTextDecryption(TextDecryptionObject decryptTextObject);
+
+        /// <summary>
+        /// After all necessary preparations are done, executes the encryption procedure.
+        /// </summary>
+        /// <param name="encryptFileObject">Object that contains the necessary data for file encryption.</param>
+        void ExecuteFileEncryption(FileEncryptionObject encryptFileObject);
+
+        /// <summary>
+        /// After all necessary preparations are done, executes the decryption procedure.
+        /// </summary>
+        /// <param name="decryptFileObject">Object that contains the necessary data for file decryption.</param>
+        void ExecuteFileDecryption(FileDecryptionObject decryptFileObject);
     }
 }
