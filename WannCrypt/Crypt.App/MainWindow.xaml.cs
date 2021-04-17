@@ -10,7 +10,7 @@ namespace Crypt
     using System.IO;
     using System.Windows;
     using System.Windows.Controls;
-    using Crypt.ViewModel;
+    using Crypt.App.ViewModel;
     using Microsoft.Win32;
 
     /// <summary>
@@ -19,6 +19,8 @@ namespace Crypt
     public partial class MainWindow : Window
     {
         private MainViewModel mainVM;
+        private EncryptionViewModel encryptVM;
+        private DecryptionViewModel decryptVM;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -27,11 +29,13 @@ namespace Crypt
         {
             InitializeComponent();
             this.mainVM = this.FindResource("MainVM") as MainViewModel;
+            this.encryptVM = this.FindResource("EncryptionVM") as EncryptionViewModel;
+            this.decryptVM = this.FindResource("DecryptionVM") as DecryptionViewModel;
         }
 
         private void OpenFileExplorerToBrowse(object sender, RoutedEventArgs e)
         {
-            string path = Directory.GetCurrentDirectory() + "\\.TryOuts";
+            string path = Directory.GetCurrentDirectory();
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = path;
             dlg.DefaultExt = ".png";
@@ -43,15 +47,15 @@ namespace Crypt
 
                 if (senderButton.Tag.ToString() == "encrypt")
                 {
-                    this.mainVM.EncryptFileObject.Path = dlg.FileName;
-                    this.mainVM.EncryptFileObject.FileName = dlg.SafeFileName;
-                    this.mainVM.EncryptFileObject.Extension = dlg.DefaultExt;
+                    this.encryptVM.EncryptFileObject.Path = dlg.FileName;
+                    this.encryptVM.EncryptFileObject.FileName = dlg.SafeFileName;
+                    this.encryptVM.EncryptFileObject.Extension = dlg.DefaultExt;
                 }
                 else if (senderButton.Tag.ToString() == "decrypt")
                 {
-                    this.mainVM.DecryptFileObject.Path = dlg.FileName;
-                    this.mainVM.DecryptFileObject.FileName = dlg.SafeFileName;
-                    this.mainVM.DecryptFileObject.Extension = dlg.DefaultExt;
+                    this.decryptVM.DecryptFileObject.Path = dlg.FileName;
+                    this.decryptVM.DecryptFileObject.FileName = dlg.SafeFileName;
+                    this.decryptVM.DecryptFileObject.Extension = dlg.DefaultExt;
                 }
             }
         }
@@ -60,12 +64,12 @@ namespace Crypt
         {
             if (isFileEncrypt.IsChecked ?? false)
             {
-                this.mainVM.IsFileEncryption = true;
+                this.encryptVM.IsFileEncryption = true;
             }
 
             if (isFileDecrypt.IsChecked ?? false)
             {
-                this.mainVM.IsFileDecryption = true;
+                this.decryptVM.IsFileDecryption = true;
             }
         }
 
@@ -83,6 +87,16 @@ namespace Crypt
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = path;
             dlg.ShowDialog();
+        }
+
+        private void CopyKey(object sender, RoutedEventArgs e)
+        {
+            this.decryptVM.KeyStringDecryption = this.encryptVM.KeyStringEncryption;
+        }
+
+        private void CopyConfiguration(object sender, RoutedEventArgs e)
+        {
+            this.decryptVM.CryptSize = this.encryptVM.CryptSize;
         }
     }
 }

@@ -102,10 +102,9 @@ namespace Crypt.Logic.Misc
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        /// <param name="encryptTextObject">Object storing data about a text based encryption.</param>
-        /// <param name="encryptFileObject">Object storing data about a file based encryption.</param>
         /// <param name="givenSize">Determines the size of the key.</param>
-        public void GenerateRandomKey(IEncryptionObject encryptTextObject, IEncryptionObject encryptFileObject, EncryptionSize givenSize)
+        /// <returns>Returns the key in string format.</returns>
+        public string GenerateRandomKey(EncryptionSize givenSize)
         {
             string allCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,?;.:-*_<>#&@{}/-+=";
 
@@ -116,11 +115,7 @@ namespace Crypt.Logic.Misc
                 generatedKey[i] = Convert.ToByte(allCharacters[rnd.Next(0, allCharacters.Length - 1)]);
             }
 
-            encryptTextObject.Key = generatedKey;
-            encryptFileObject.Key = generatedKey;
-
-            encryptTextObject.KeyString = BitConverter.ToString(generatedKey);
-            encryptFileObject.KeyString = BitConverter.ToString(generatedKey);
+            return BitConverter.ToString(generatedKey);
         }
     }
 }
