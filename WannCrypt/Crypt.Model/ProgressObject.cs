@@ -9,7 +9,7 @@ namespace Crypt.Model
     /// <summary>
     /// Represent a model that is able to track the progress of execution.
     /// </summary>
-    public class ProgressModel
+    public class ProgressObject
     {
         /// <summary>
         /// Current progress towards the finish (100%).

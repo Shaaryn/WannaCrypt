@@ -104,7 +104,7 @@ namespace Crypt.Logic.Misc
         /// </summary>
         /// <param name="givenSize">Determines the size of the key.</param>
         /// <returns>Returns the key in string format.</returns>
-        public string GenerateRandomKey(EncryptionSize givenSize)
+        public (byte[], string) GenerateRandomKey(EncryptionSize givenSize)
         {
             string allCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,?;.:-*_<>#&@{}/-+=";
 
@@ -115,7 +115,7 @@ namespace Crypt.Logic.Misc
                 generatedKey[i] = Convert.ToByte(allCharacters[rnd.Next(0, allCharacters.Length - 1)]);
             }
 
-            return BitConverter.ToString(generatedKey);
+            return (generatedKey, BitConverter.ToString(generatedKey));
         }
     }
 }

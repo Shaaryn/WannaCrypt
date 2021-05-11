@@ -38,8 +38,9 @@ namespace Crypt.Logic.Misc
         /// <summary>
         /// Calculates how many arrays we need to store the decrypted message in 16 bit blocks.
         /// </summary>
+        /// <param name="encryptedMessageString">String representation of the message we want to split into arrays.</param>
         /// <param name="decryptionObject">Object containing the necessary decryption data.</param>
         /// <returns>Returns with a lsit of arrays containing the decrypted message.</returns>
-        public List<byte[]> CalculateArrays(IDecryptionObject decryptionObject);
+        public List<byte[]> CalculateArrays(string encryptedMessageString, IDecryptionObject decryptionObject = null);
     }
 }

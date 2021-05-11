@@ -1,27 +1,28 @@
 ﻿// |+|-------------------------YB7IQX-------------------------|+|
-// <copyright file="CryptService.cs" company="ITSec midterm project">
+// <copyright file="CryptServiceAES.cs" company="ITSec midterm project">
 // This code is part of my 'ITSec midterm project'. Please use it carefully.
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Logic
+namespace Crypt.Logic.AES
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
-    using Crypt.Logic.DecryptionLogic;
-    using Crypt.Logic.EncryptionLogic;
+    using Crypt.Logic.AES.DecryptionLogic;
+    using Crypt.Logic.AES.EncryptionLogic;
     using Crypt.Logic.Misc;
     using Crypt.Model;
+    using Crypt.Model.AES;
     using Crypt.Model.Enum;
     using Crypt.Model.Interfaces;
 
     /// <summary>
-    /// Service provider responsible for the execution and flow control of the encryption and decryption procedures.
+    /// Service provider responsible for the execution and flow control of the encryption and decryption procedures regarding AES.
     /// </summary>
-    public class CryptService : ICryptService
+    public class CryptServiceAES : ICryptServiceAES
     {
         private const int BlockSize = 16;
 
@@ -47,9 +48,9 @@ namespace Crypt.Logic
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CryptService"/> class.
+        /// Initializes a new instance of the <see cref="CryptServiceAES"/> class.
         /// </summary>
-        public CryptService()
+        public CryptServiceAES()
         {
             helpMeFormat = new FormatHelper();
             helpMeKey = new KeyHelper();
@@ -59,7 +60,7 @@ namespace Crypt.Logic
         /// <inheritdoc/>
         /// </summary>
         /// <param name="encryptTextObject">Object that contains the necessary data for text encryption.</param>
-        public void ExecuteTextEncryption(TextEncryptionObject encryptTextObject)
+        public void ExecuteTextEncryption(IEncryptionObject encryptTextObject)
         {
             // Define the rounds
             encryptTextObject.Round = DefineRounds(encryptTextObject);
@@ -109,14 +110,14 @@ namespace Crypt.Logic
         /// <inheritdoc/>
         /// </summary>
         /// <param name="decryptTextObject">Object that contains the necessary data for text decryption.</param>
-        public void ExecuteTextDecryption(TextDecryptionObject decryptTextObject)
+        public void ExecuteTextDecryption(IDecryptionObject decryptTextObject)
         {
             // Defines the rounds
             decryptTextObject.Round = DefineRounds(decryptTextObject);
 
             // Break the message into blocksized arrays
             decryptTextObject.EncryptedPaddedMessage = new List<byte[]>();
-            decryptTextObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(decryptTextObject);
+            decryptTextObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(null, decryptTextObject);
 
             // Calculate the expanded key.
             decryptTextObject.Key = new byte[(int)decryptTextObject.Size];
@@ -147,12 +148,66 @@ namespace Crypt.Logic
         }
 
         /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="publicSpace">object that contains data regarding the public space.</param>
+        /// <param name="receiverDHObject">object that will receive the message currently being transmitted.</param>
+        public void ExecuteDHTextDecryption(IPublicSpaceObject publicSpace, IDHObject receiverDHObject)
+        {
+            // Defines the rounds
+            receiverDHObject.Round = DefineRounds(receiverDHObject);
+
+            // Break the message into blocksized arrays
+            receiverDHObject.EncryptedPaddedMessage = new List<byte[]>();
+
+            switch (receiverDHObject.PartnerID)
+            {
+                case PartnerSide.Right:
+
+                    receiverDHObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(publicSpace.LeftPartyPublicMessage);
+                    break;
+                case PartnerSide.Left:
+
+                    receiverDHObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(publicSpace.RightPartyPublicMessage);
+                    break;
+            }
+
+            // Calculate the expanded key.
+            receiverDHObject.Key = new byte[(int)receiverDHObject.Size];
+            int k = 0;
+            for (int i = 0; i < receiverDHObject.KeyString.Length; i += 3)
+            {
+                receiverDHObject.Key[k] = Convert.ToByte(receiverDHObject.KeyString.Substring(i, 2), 16);
+                k++;
+            }
+
+            receiverDHObject.ExpandedKey = helpMeKey.KeyExpansion(receiverDHObject);
+
+            // Execute the decryption process for each block
+            Decryption decryption = new Decryption();
+            byte[] tmpDecryptedMessageByte = new byte[BlockSize];
+
+            receiverDHObject.ReceivedMessageByte = new byte[BlockSize * receiverDHObject.EncryptedPaddedMessage.Count];
+
+            for (int i = 0; i < receiverDHObject.EncryptedPaddedMessage.Count; i++)
+            {
+                tmpDecryptedMessageByte = decryption.Decrypt(receiverDHObject, i);
+                for (int j = 0; j < BlockSize; j++)
+                {
+                    receiverDHObject.ReceivedMessageByte[(i * BlockSize) + j] = tmpDecryptedMessageByte[j];
+                }
+            }
+
+            receiverDHObject.ReceivedMessage = Encoding.UTF8.GetString(receiverDHObject.ReceivedMessageByte);
+        }
+
+        /// <summary>
         /// <inheritdoc/>.
         /// </summary>
         /// <param name="progressReport">Object that reports the progress of the encryption.</param>
         /// <param name="encryptFileObject">Object that contains the necessary data for file encryption.</param>
         /// <returns>Awaitable asynchronous operation.</returns>
-        public async Task ExecuteFileEncryptionAsync(IProgress<ProgressModel> progressReport, FileEncryptionObject encryptFileObject)
+        public async Task ExecuteFileEncryptionAsync(IProgress<ProgressObject> progressReport, FileEncryptionObject encryptFileObject)
         {
             // Read the file
             encryptFileObject.MessageByte = File.ReadAllBytes(encryptFileObject.Path);
@@ -162,7 +217,7 @@ namespace Crypt.Logic
 
             // Pad the message + async model/variable
             encryptFileObject.PaddedMessage = helpMeFormat.CalculatePadding(encryptFileObject);
-            ProgressModel report = new ProgressModel();
+            ProgressObject report = new ProgressObject();
             report.MaximumNumberOfBlocks = encryptFileObject.PaddedMessage.Length / 16;
 
             // Calculate the expanded key
@@ -212,7 +267,7 @@ namespace Crypt.Logic
         /// <param name="progressReport">Object that repost the progress of the decryption.</param>
         /// <param name="decryptFileObject">Object that contains the necessary data for file decryption.</param>
         /// <returns>Awaitable asynchronous operation.</returns>
-        public async Task ExecuteFileDecryptionAsync(IProgress<ProgressModel> progressReport, FileDecryptionObject decryptFileObject)
+        public async Task ExecuteFileDecryptionAsync(IProgress<ProgressObject> progressReport, FileDecryptionObject decryptFileObject)
         {
             // Read the file
             decryptFileObject.MessageByte = File.ReadAllBytes(decryptFileObject.Path);
@@ -222,8 +277,8 @@ namespace Crypt.Logic
 
             // Break the file into blocksized arrays
             decryptFileObject.EncryptedPaddedMessage = new List<byte[]>();
-            decryptFileObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(decryptFileObject);
-            ProgressModel report = new ProgressModel();
+            decryptFileObject.EncryptedPaddedMessage = helpMeFormat.CalculateArrays(null, decryptFileObject);
+            ProgressObject report = new ProgressObject();
             report.MaximumNumberOfBlocks = decryptFileObject.EncryptedPaddedMessage.Count;
 
             // Calculate the expanded key.

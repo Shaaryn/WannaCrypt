@@ -6,21 +6,58 @@
 
 namespace Crypt
 {
-    using System.Diagnostics;
-    using System.IO;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
-    using Crypt.App.ViewModel;
-    using Microsoft.Win32;
+    using Crypt.App.View;
+    using Crypt.App.ViewModel.AES;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private MainViewModel mainVM;
         private EncryptionViewModel encryptVM;
         private DecryptionViewModel decryptVM;
+
+        private Page currentPage;
+        private AESView viewAES;
+        private DHView viewDH;
+
+        /// <summary>
+        /// Currently displayed (and being used) page.
+        /// </summary>
+        public Page CurrentPage
+        {
+            get
+            {
+                return currentPage;
+            }
+
+            set
+            {
+                currentPage = value;
+                OnPropertyChanged(nameof(CurrentPage));
+            }
+        }
+
+        /// <summary>
+        /// View(Page) of the AES form.
+        /// </summary>
+        public AESView ViewAES
+        {
+            get { return viewAES; }
+            set { viewAES = value; }
+        }
+
+        /// <summary>
+        /// View(Page) of the DH form.
+        /// </summary>
+        public DHView ViewDH
+        {
+            get { return viewDH; }
+            set { viewDH = value; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -28,75 +65,63 @@ namespace Crypt
         public MainWindow()
         {
             InitializeComponent();
-            this.mainVM = this.FindResource("MainVM") as MainViewModel;
             this.encryptVM = this.FindResource("EncryptionVM") as EncryptionViewModel;
             this.decryptVM = this.FindResource("DecryptionVM") as DecryptionViewModel;
+
+            ViewAES = new AESView();
+            currentPage = ViewAES;
         }
 
-        private void OpenFileExplorerToBrowse(object sender, RoutedEventArgs e)
+        private void Exit(object sender, RoutedEventArgs e)
         {
-            string path = Directory.GetCurrentDirectory();
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.InitialDirectory = path;
-            dlg.DefaultExt = ".png";
-            bool? result = dlg.ShowDialog();
+            this.Close();
+        }
 
-            if (result == true)
+        private void DHPage(object sender, RoutedEventArgs e)
+        {
+            if (this.currentPage is not DHView)
             {
-                Button senderButton = sender as Button;
-
-                if (senderButton.Tag.ToString() == "encrypt")
+                if (this.ViewDH != null)
                 {
-                    this.encryptVM.EncryptFileObject.Path = dlg.FileName;
-                    this.encryptVM.EncryptFileObject.FileName = dlg.SafeFileName;
-                    this.encryptVM.EncryptFileObject.Extension = dlg.DefaultExt;
+                    this.CurrentPage = this.ViewDH;
                 }
-                else if (senderButton.Tag.ToString() == "decrypt")
+                else
                 {
-                    this.decryptVM.DecryptFileObject.Path = dlg.FileName;
-                    this.decryptVM.DecryptFileObject.FileName = dlg.SafeFileName;
-                    this.decryptVM.DecryptFileObject.Extension = dlg.DefaultExt;
+                    this.CurrentPage = new DHView();
                 }
             }
         }
 
-        private void DecideEncryptionType(object sender, RoutedEventArgs e)
+        private void AESPage(object sender, RoutedEventArgs e)
         {
-            if (isFileEncrypt.IsChecked ?? false)
+            if (this.currentPage is not AESView)
             {
-                this.encryptVM.IsFileEncryption = true;
+                if (this.ViewAES != null)
+                {
+                    this.CurrentPage = this.ViewAES;
+                }
+                else
+                {
+                    this.CurrentPage = new AESView();
+                }
             }
+        }
 
-            if (isFileDecrypt.IsChecked ?? false)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="propertyName">Name of the property that is changing.</param>
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (propertyName != null)
             {
-                this.decryptVM.IsFileDecryption = true;
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
-        }
-
-        private void OpenEncryptResultDirectory(object sender, RoutedEventArgs e)
-        {
-            string path = Directory.GetCurrentDirectory() + "\\EncryptedFiles";
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.InitialDirectory = path;
-            dlg.ShowDialog();
-        }
-
-        private void OpenDecryptResultDirectory(object sender, RoutedEventArgs e)
-        {
-            string path = Directory.GetCurrentDirectory() + "\\DecryptedFiles";
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.InitialDirectory = path;
-            dlg.ShowDialog();
-        }
-
-        private void CopyKey(object sender, RoutedEventArgs e)
-        {
-            this.decryptVM.KeyStringDecryption = this.encryptVM.KeyStringEncryption;
-        }
-
-        private void CopyConfiguration(object sender, RoutedEventArgs e)
-        {
-            this.decryptVM.CryptSize = this.encryptVM.CryptSize;
         }
     }
 }

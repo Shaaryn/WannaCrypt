@@ -1,72 +1,32 @@
 ﻿// |+|-------------------------YB7IQX-------------------------|+|
-// <copyright file="FileDecryptionObject.cs" company="ITSec midterm project">
+// <copyright file="TextEncryptionObject.cs" company="ITSec midterm project">
 // This code is part of my 'ITSec midterm project'. Please use it carefully.
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model
+namespace Crypt.Model.AES
 {
-    using System.Collections.Generic;
     using System.ComponentModel;
     using Crypt.Model.Enum;
     using Crypt.Model.Interfaces;
 
     /// <summary>
-    /// Model that is resposible of storing the data regarding a file that is being decrypted.
+    /// Model that is responsible of storing the data regarding a text that is being encrypted.
     /// </summary>
-    public class FileDecryptionObject : IAESObject, IDecryptionObject, IFileObject
+    public class TextEncryptionObject : IAESObject, IEncryptionObject
     {
-        private string fileName = "No file selected.";
-        private string path;
-        private string extension;
-
         private string keyString;
         private byte[] key;
         private byte[] expandedKey;
 
         private string message;
         private byte[] messageByte;
+        private byte[] paddedMessage;
         private string encryptedMessageString;
-        private List<byte[]> encryptedPaddedMessage;
         private byte[] encryptedMessage;
 
         private EncryptionSize size;
         private RoundSize round;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public string FileName
-        {
-            get
-            {
-                return this.fileName;
-            }
-
-            set
-            {
-                this.fileName = value;
-                this.OnPropertyChanged(nameof(this.FileName));
-            }
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public string Path
-        {
-            get { return this.path; }
-            set { this.path = value; }
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public string Extension
-        {
-            get { return this.extension; }
-            set { this.extension = value; }
-        }
 
         /// <summary>
         /// <inheritdoc/>
@@ -132,6 +92,15 @@ namespace Crypt.Model
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        public byte[] PaddedMessage
+        {
+            get { return this.paddedMessage; }
+            set { this.paddedMessage = value; }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string EncryptedMessageString
         {
             get
@@ -144,15 +113,6 @@ namespace Crypt.Model
                 this.encryptedMessageString = value;
                 this.OnPropertyChanged(nameof(this.EncryptedMessageString));
             }
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public List<byte[]> EncryptedPaddedMessage
-        {
-            get { return this.encryptedPaddedMessage; }
-            set { this.encryptedPaddedMessage = value; }
         }
 
         /// <summary>

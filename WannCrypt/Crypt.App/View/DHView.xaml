@@ -1,0 +1,625 @@
+﻿<Page x:Class="Crypt.App.View.DHView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:vm="clr-namespace:Crypt.App.ViewModel.DH"
+      mc:Ignorable="d" 
+      Title="DH View" Width="1920" Height="1020"
+      Background="#4D4D4D"
+      FontSize="15" FontFamily="Roboto"
+      ShowsNavigationUI="False">
+    <Page.Resources>
+        <vm:SecretConversationViewModel x:Key="SecConVM" />
+    </Page.Resources>
+    <materialDesign:Transitioner SelectedIndex="0">
+        <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromRight, Duration=0:0:1.25}">
+            <Grid>
+                <StackPanel VerticalAlignment="Top">
+                    <!-- Page Header -->
+                    <materialDesign:Card Background="#282828" Padding="5" Margin="25" 
+                             materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                             materialDesign:ShadowAssist.ShadowEdges="Bottom, Right">
+                        <StackPanel>
+                            <Rectangle Height="5" Fill="IndianRed" Width="250"/>
+                            <Label Foreground="#FFBFBFBF" FontSize="30" FontFamily="Copperplate Gothic Bold"
+                       HorizontalAlignment="Center">
+                                WannaCrypt
+                            </Label>
+                            <TextBlock Foreground="#FFBFBFBF" Margin="25,0,0,0">
+                    Welcome to the
+                    <Run Text="Secret Conversation" Foreground="IndianRed"/>
+                    page!
+                            </TextBlock>
+                            <TextBlock Foreground="#FFBFBFBF" Margin="25,5,0,0" TextWrapping="Wrap">
+                    On this page you are able to
+                    <Run Text="encrypt" Foreground="IndianRed"/>
+                    and 
+                    <Run Text="decrypt" Foreground="IndianRed"/>
+                    text messages and binary files. Both text and file encryption uses the AES encryption, that has a fixed
+                    block size. However, you 
+                    <Run Text="have to decide" FontWeight="Bold"/>
+                    the size of the key you want to use. 
+                    After you have choosen a key size, you can generate a random key or insert your own
+                    to the corresponding field. 
+                    <Run Text="Don't forget to" FontWeight="Bold"/>
+                    to tick the "File" checkbox when encrypting files.<LineBreak />
+                    After all set up you can provide your text message or file and then simply press the encrypt or
+                    decrypt button!
+                            </TextBlock>
+                            <TextBlock Foreground="#FFBFBFBF" Margin="25,5,0,0">
+                    <Run Text="Have fun crypting!:)" Foreground="IndianRed"/>
+                            </TextBlock>
+                            <Rectangle Height="5" Margin="20,5,0,5" Fill="IndianRed" Width="133" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <!-- Page Content splitter-->
+                    <Grid DataContext="{StaticResource SecConVM}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Bob Section-->
+                        <Grid Grid.Column="0" Margin="50,0,25,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!-- Section Header -->
+                            <materialDesign:Card Grid.Column="0"
+                                     Background="#282828" Padding="5" Margin="5,0,5,0"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="CardAccountDetailsOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            Bob
+                                        </Label>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                            <!-- Confugration Subsection -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Subsection Header -->
+                                <materialDesign:Card Grid.Column="0" Height="50"
+                                         Background="#282828" Padding="0" Margin="5,0,5,0"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                        <materialDesign:PackIcon Kind="CogOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            Configuration
+                                        </Label>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                    <!-- Property - Key size -->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF" FontSize="16"
+                                   VerticalAlignment="Center">
+                                            Key size:
+                                        </Label>
+                                        <ComboBox Foreground="Black" Margin="5,0,0,0"
+                                  Width="100"
+                                  ItemsSource="{Binding EncryptSizes}" SelectedItem="{Binding CryptSize}" />
+                                    </StackPanel>
+                                    <!-- Property - Block size-->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Block size:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                   Width="100" VerticalAlignment="Center"
+                                   IsEnabled="False">
+                            128 bits
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                            <!-- Seperator -->
+                            <Rectangle Grid.Row="2" Margin="200,0,0,0" Fill="IndianRed"/>
+                            <!-- Content - Keys -->
+                            <StackPanel Grid.Row="3">
+                                <Grid Margin="0,5,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:Card Grid.Column="0" Height="50"
+                                         Background="#282828" Width="250"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                            <materialDesign:PackIcon Kind="KeyOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                            <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                Keys
+                                            </Label>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                    <!-- Control - Generate Alice Key Button-->
+                                    <Button Grid.Column="1" Style="{StaticResource MaterialDesignRaisedButton}"
+                                    Width="200" Margin="5,5,0,5"
+                                    VerticalAlignment="Center" HorizontalAlignment="Left"
+                                    Command="{Binding GenerateKeyForLeftPartner}">
+                                        Generate Key for Bob
+                                    </Button>
+                                </Grid>
+                                <!-- Property - Personal key -->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding LeftPartner.PrivateKeyString}"
+                             materialDesign:HintAssist.Hint="Bob's personal key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             BorderBrush="IndianRed"
+                             Height="50" Width="430" Margin="25,10,5,10" TextWrapping="NoWrap" />
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="50" Margin="25,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding GeneratePublicKeyForLeftPartner}">
+                                        <materialDesign:PackIcon Kind="ArrowRightBold"  />
+                                    </Button>
+                                </StackPanel>
+                                <!-- Property - Full key -->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding LeftPartner.KeyString}"
+                             materialDesign:HintAssist.Hint="Bob's full key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="50" Width="430" Margin="25,10,5,10" TextWrapping="NoWrap" />
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="50" Margin="25,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding AssembleKeyForLeftPartner}">
+                                        <materialDesign:PackIcon Kind="ArrowLeftBold"  />
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                            <!-- Seperator -->
+                            <!-- <Rectangle Grid.Row="4" Margin="0,0,0,0" Fill="IndianRed"/> -->
+                            <!-- Content - Keys -->
+                            <StackPanel Grid.Row="5">
+                                <Grid Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:Card Grid.Column="0" Height="50"
+                                         Background="#282828" Width="250"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                            <materialDesign:PackIcon Kind="MessageTextOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                            <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                Messages
+                                            </Label>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                    <!-- Control - Bob's message Button-->
+                                    <Button Grid.Column="1" Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="200" Margin="5,5,0,5"
+                                    VerticalAlignment="Center" HorizontalAlignment="Left"
+                                    Command="{Binding SendMessageFromLeftToRight}">
+                                        Send Bob's Message
+                                    </Button>
+                                </Grid>
+                                <!-- Property - Personal key -->
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding LeftPartner.Message}"
+                             materialDesign:HintAssist.Hint="Bob's message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             BorderBrush="IndianRed"
+                             Height="100" Margin="25,10,25,10" TextWrapping="NoWrap" />
+                                <!-- Property - Full key -->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding LeftPartner.ReceivedMessage}"
+                             materialDesign:HintAssist.Hint="Alice's message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="100" Width="430" Margin="25,10,25,10" TextWrapping="NoWrap" />
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="50" Margin="5,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding ReceiveMessageFromRightToLeft}">
+                                        <materialDesign:PackIcon Kind="ArrowLeftBold"  />
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <!-- Separator -->
+                        <Rectangle Grid.Column="1" Margin="0,0,0,0" Fill="IndianRed"/>
+                        <!-- Public Section -->
+                        <Grid Grid.Column="2" Margin="25,0,25,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="62"/>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!-- Section Header -->
+                            <materialDesign:Card Grid.Row="0" Background="#282828" Padding="5" Margin="5,0,5,0"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="Earth" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            Public
+                                        </Label>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                            <!-- Confugration Subsection -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Subsection Header -->
+                                <StackPanel Grid.Column="0" HorizontalAlignment="Center" >
+                                    <!-- Property - Key size -->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF" FontSize="16"
+                                   VerticalAlignment="Center">
+                                            Key size:
+                                        </Label>
+                                        <ComboBox Foreground="Black" Margin="5,0,0,0"
+                                  Width="100"
+                                  ItemsSource="{Binding EncryptSizes}" SelectedItem="{Binding CryptSize}" />
+                                    </StackPanel>
+                                    <!-- Property - Block size-->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Block size:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                   Width="100" VerticalAlignment="Center"
+                                   IsEnabled="False">
+                            128 bits
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" HorizontalAlignment="Center" >
+                                    <!-- Property - Public DH key (large af prime)-->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Public prime:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0" Width="100"
+                                       VerticalAlignment="Center">
+                            2147483423
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <!-- Property - Public BH base (tiny prime) -->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                                   VerticalAlignment="Center">
+                                            Public base:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                   Width="75" VerticalAlignment="Center">
+                            3
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                            <!-- Separator -->
+                            <Rectangle Grid.Row="2" Margin="100,0,100,0" Fill="IndianRed"/>
+                            <!-- Content - Keys -->
+                            <StackPanel Grid.Row="3">
+                                <materialDesign:Card Grid.Column="0" Height="50"
+                                         Background="#282828" Padding="0" Margin="105,0,105,0"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="KeyOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            Keys
+                                        </Label>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <!-- Property - Personal key -->
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding PublicSpace.LeftPartyPublicKeyString}"
+                             materialDesign:HintAssist.Hint="Bob's public key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="50" Margin="25,10,25,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Center"/>
+                                <!-- Property - Full key -->
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding PublicSpace.RightPartyPublicKeyString}"
+                             materialDesign:HintAssist.Hint="Alice's public key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="50" Margin="25,10,25,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                            <!-- Seperator -->
+                            <!-- <Rectangle Grid.Row="4" Margin="0,0,0,0" Fill="IndianRed"/> -->
+                            <!-- Content - Keys -->
+                            <StackPanel Grid.Row="5">
+                                <materialDesign:Card Grid.Column="0" Height="50"
+                                         Background="#282828" Padding="0" Margin="105,0,105,0"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="MessageTextOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            Messages
+                                        </Label>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <!-- Property - Personal key -->
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding PublicSpace.LeftPartyPublicMessage}"
+                             materialDesign:HintAssist.Hint="Bob's message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="100" Margin="25,10,25,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Center"/>
+                                <!-- Property - Full key -->
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding PublicSpace.RightPartyPublicMessage}"
+                             materialDesign:HintAssist.Hint="Alice's message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="100" Margin="25,10,25,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        <!-- Separator -->
+                        <Rectangle Grid.Column="3" Margin="0,0,0,0" Fill="IndianRed"/>
+                        <!-- Alice Section -->
+                        <Grid Grid.Column="4" Margin="25,0,50,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!-- Section Header -->
+                            <materialDesign:Card Background="#282828" Padding="5" Margin="5,0,5,0"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="CardAccountDetailsOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            Alice
+                                        </Label>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                            <!-- Confugration Subsection -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Subsection Header -->
+                                <materialDesign:Card Grid.Column="1" Height="50"
+                                         Background="#282828" Padding="0" Margin="5,0,5,0"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            Configuration
+                                        </Label>
+                                        <materialDesign:PackIcon Kind="CogOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <StackPanel Grid.Column="0" HorizontalAlignment="Center" >
+                                    <!-- Property - Key size -->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF" FontSize="16"
+                                   VerticalAlignment="Center">
+                                            Key size:
+                                        </Label>
+                                        <ComboBox Foreground="Black" Margin="5,0,0,0"
+                                  Width="100"
+                                  ItemsSource="{Binding EncryptSizes}" SelectedItem="{Binding CryptSize}" />
+                                    </StackPanel>
+                                    <!-- Property - Block size-->
+                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Block size:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                   Width="100" VerticalAlignment="Center"
+                                   IsEnabled="False">
+                            128 bits
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                            <!-- Seperator -->
+                            <Rectangle Grid.Row="2" Margin="0,0,200,0" Fill="IndianRed"/>
+                            <!-- Content - Keys -->
+                            <StackPanel Grid.Row="3">
+                                <Grid Margin="0,5,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Control - Generate Alice Key Button-->
+                                    <Button Grid.Column="0"  Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="200" Margin="0,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding GenerateKeyForRightPartner}">
+                                        Generate Key for Alice
+                                    </Button>
+                                    <materialDesign:Card Grid.Column="1" Height="50"
+                                         Background="#282828" Padding="0" Margin="25,0,5,0" Width="250"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top" HorizontalAlignment="Right">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                                            <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                Keys
+                                            </Label>
+                                            <materialDesign:PackIcon Kind="KeyOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+
+                                </Grid>
+                                <!-- Property - Private key -->
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="50" Margin="25,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding GeneratePublicKeyForRightPartner}">
+                                        <materialDesign:PackIcon Kind="ArrowLeftBold" />
+                                    </Button>
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                     Text="{Binding RightPartner.PrivateKeyString}"
+                                     materialDesign:HintAssist.Hint="Alice's private key"
+                                     materialDesign:HintAssist.Background="#4D4D4D"
+                                     Height="50" Width="430" Margin="25,10,0,10" TextWrapping="NoWrap"
+                                     BorderBrush="IndianRed"
+                                     HorizontalContentAlignment="Right"/>
+                                </StackPanel>
+                                <!-- Property - Full key -->
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="50" Margin="25,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding AssembleKeyForRightPartner}">
+                                        <materialDesign:PackIcon Kind="ArrowRightBold"  />
+                                    </Button>
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding RightPartner.KeyString}"
+                             materialDesign:HintAssist.Hint="Alice's full key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="50" Width="430" Margin="25,10,0,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <!-- Seperator -->
+                            <!-- <Rectangle Grid.Row="4" Margin="0,0,0,0" Fill="IndianRed"/> -->
+                            <!-- Content - Keys -->
+                            <StackPanel Grid.Row="5">
+                                <Grid Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Control - Alice's Message Button-->
+                                    <Button Grid.Column="0" Style="{StaticResource MaterialDesignRaisedButton}"
+                                    Width="200" Margin="0,5,5,5"
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding SendMessageFromRightToLeft}">
+                                        Send Alice's Message
+                                    </Button>
+                                    <materialDesign:Card Grid.Column="1" Height="50"
+                                         Background="#282828" Padding="0" Margin="25,0,0,0" Width="250"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left"
+                                         VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                                            <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                Messages
+                                            </Label>
+                                            <materialDesign:PackIcon Kind="MessageTextOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </Grid>
+                                <!-- Property - Personal key -->
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding RightPartner.Message}"
+                             materialDesign:HintAssist.Hint="Alice's message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             BorderBrush="IndianRed"
+                             Height="100" Margin="25,10,25,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Right"/>
+                                <!-- Property - Full key -->
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="50" Margin="25,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Right"
+                                    Command="{Binding ReceiveMessageFromLeftToRight}">
+                                        <materialDesign:PackIcon Kind="ArrowRightBold"  />
+                                    </Button>
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding RightPartner.ReceivedMessage}"
+                             materialDesign:HintAssist.Hint="Bob's message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             Height="100" Width="430" Margin="25,10,25,10" TextWrapping="NoWrap"
+                             HorizontalContentAlignment="Right"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+                <Rectangle Height="60" Fill="#282828"
+                   VerticalAlignment="Bottom"/>
+            </Grid>
+        </materialDesign:TransitionerSlide>
+    </materialDesign:Transitioner>
+</Page>

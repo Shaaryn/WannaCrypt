@@ -17,7 +17,7 @@ namespace Crypt.Model.Interfaces
         // Key properties
 
         /// <summary>
-        /// String representation of the hey key that will be used to encryp / decrypt the message.
+        /// String representation of the hex key that will be used to encryp / decrypt the message.
         /// </summary>
         public string KeyString { get; set; }
 

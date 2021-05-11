@@ -4,7 +4,7 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model
+namespace Crypt.Model.AES
 {
     using System.ComponentModel;
     using Crypt.Model.Enum;

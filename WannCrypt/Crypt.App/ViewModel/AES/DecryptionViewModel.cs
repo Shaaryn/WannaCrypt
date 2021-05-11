@@ -4,13 +4,14 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.App.ViewModel
+namespace Crypt.App.ViewModel.AES
 {
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
-    using Crypt.Logic;
+    using Crypt.Logic.AES;
     using Crypt.Model;
+    using Crypt.Model.AES;
     using Crypt.Model.Enum;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
@@ -28,7 +29,7 @@ namespace Crypt.App.ViewModel
             get { return Enum.GetValues(typeof(EncryptionSize)); }
         }
 
-        private CryptService service;
+        private CryptServiceAES service;
         private EncryptionSize cryptSize;
 
         private double fileDecryptionProgressValue = 0;
@@ -169,7 +170,7 @@ namespace Crypt.App.ViewModel
         /// </summary>
         public DecryptionViewModel()
         {
-            this.service = new CryptService();
+            this.service = new CryptServiceAES();
 
             this.decryptTextObject = new TextDecryptionObject();
             this.decryptFileObject = new FileDecryptionObject();
@@ -189,7 +190,7 @@ namespace Crypt.App.ViewModel
                 {
                     IsBrowseEnable = false;
 
-                    Progress<ProgressModel> progress = new Progress<ProgressModel>();
+                    Progress<ProgressObject> progress = new Progress<ProgressObject>();
                     progress.ProgressChanged += OnDecryptionProgressChanged;
 
                     await this.service.ExecuteFileDecryptionAsync(progress, this.DecryptFileObject);
@@ -197,7 +198,7 @@ namespace Crypt.App.ViewModel
             });
         }
 
-        private void OnDecryptionProgressChanged(object sender, ProgressModel e)
+        private void OnDecryptionProgressChanged(object sender, ProgressObject e)
         {
             if (e.CurrentProgress == 99)
             {

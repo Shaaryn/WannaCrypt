@@ -1,10 +1,10 @@
 ﻿// |+|-------------------------YB7IQX-------------------------|+|
-// <copyright file="TextDecryptionObject.cs" company="ITSec midterm project">
+// <copyright file="FileDecryptionObject.cs" company="ITSec midterm project">
 // This code is part of my 'ITSec midterm project'. Please use it carefully.
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model
+namespace Crypt.Model.AES
 {
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -12,10 +12,14 @@ namespace Crypt.Model
     using Crypt.Model.Interfaces;
 
     /// <summary>
-    /// Model that is responsible of storing the data regarding a text that is being decrypted.
+    /// Model that is resposible of storing the data regarding a file that is being decrypted.
     /// </summary>
-    public class TextDecryptionObject : IAESObject, IDecryptionObject
+    public class FileDecryptionObject : IAESObject, IDecryptionObject, IFileObject
     {
+        private string fileName = "No file selected.";
+        private string path;
+        private string extension;
+
         private string keyString;
         private byte[] key;
         private byte[] expandedKey;
@@ -28,6 +32,41 @@ namespace Crypt.Model
 
         private EncryptionSize size;
         private RoundSize round;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public string FileName
+        {
+            get
+            {
+                return this.fileName;
+            }
+
+            set
+            {
+                this.fileName = value;
+                this.OnPropertyChanged(nameof(this.FileName));
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public string Path
+        {
+            get { return this.path; }
+            set { this.path = value; }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public string Extension
+        {
+            get { return this.extension; }
+            set { this.extension = value; }
+        }
 
         /// <summary>
         /// <inheritdoc/>

@@ -4,13 +4,15 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.App.ViewModel
+namespace Crypt.App.ViewModel.AES
 {
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
     using Crypt.Logic;
+    using Crypt.Logic.AES;
     using Crypt.Model;
+    using Crypt.Model.AES;
     using Crypt.Model.Enum;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
@@ -28,7 +30,7 @@ namespace Crypt.App.ViewModel
             get { return Enum.GetValues(typeof(EncryptionSize)); }
         }
 
-        private CryptService service;
+        private CryptServiceAES service;
         private EncryptionSize cryptSize;
 
         private double fileEncryptionProgressValue = 0;
@@ -169,7 +171,7 @@ namespace Crypt.App.ViewModel
         /// </summary>
         public EncryptionViewModel()
         {
-            this.service = new CryptService();
+            this.service = new CryptServiceAES();
 
             this.encryptTextObject = new TextEncryptionObject();
             this.encryptFileObject = new FileEncryptionObject();
@@ -182,7 +184,7 @@ namespace Crypt.App.ViewModel
         {
             this.GenerateKeyCommand = new RelayCommand(() =>
             {
-                KeyStringEncryption = this.service.HelpMeKey.GenerateRandomKey(this.encryptTextObject.Size);
+                (this.EncryptTextObject.Key, KeyStringEncryption) = this.service.HelpMeKey.GenerateRandomKey(this.encryptTextObject.Size);
             });
         }
 
@@ -198,7 +200,7 @@ namespace Crypt.App.ViewModel
                 {
                     IsBrowseEnable = false;
 
-                    Progress<ProgressModel> progress = new Progress<ProgressModel>();
+                    Progress<ProgressObject> progress = new Progress<ProgressObject>();
                     progress.ProgressChanged += OnEncryptionProgressChanged;
 
                     await this.service.ExecuteFileEncryptionAsync(progress, this.EncryptFileObject);
@@ -206,7 +208,7 @@ namespace Crypt.App.ViewModel
             });
         }
 
-        private void OnEncryptionProgressChanged(object sender, ProgressModel e)
+        private void OnEncryptionProgressChanged(object sender, ProgressObject e)
         {
             if (e.CurrentProgress == 99)
             {

@@ -4,7 +4,7 @@
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Logic.DecryptionLogic
+namespace Crypt.Logic.AES.DecryptionLogic
 {
     using Crypt.Model.Interfaces;
 

@@ -1,21 +1,27 @@
 ﻿// |+|-------------------------YB7IQX-------------------------|+|
-// <copyright file="TextEncryptionObject.cs" company="ITSec midterm project">
+// <copyright file="PrivateSpaceObject.cs" company="ITSec midterm project">
 // This code is part of my 'ITSec midterm project'. Please use it carefully.
 // </copyright>
 // |+|-------------------------YB7IQX-------------------------|+|
 
-namespace Crypt.Model
+namespace Crypt.Model.DH
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using Crypt.Model.Enum;
     using Crypt.Model.Interfaces;
 
     /// <summary>
-    /// Model that is responsible of storing the data regarding a text that is being encrypted.
+    /// Model that is responsible of storing the data regarding a text message that is being encrypted, decrypted and transmitted.
+    /// It extends the <see cref="IAESObject"/> interface in a way that it can hold further information regarding DH key exchange.
     /// </summary>
-    public class TextEncryptionObject : IAESObject, IEncryptionObject
+    public class PrivateSpaceObject : IDHObject
     {
+        private PartnerSide partnerID;
+
+        private string privateKeyString;
         private string keyString;
+        private byte[] privateKey;
         private byte[] key;
         private byte[] expandedKey;
 
@@ -23,10 +29,39 @@ namespace Crypt.Model
         private byte[] messageByte;
         private byte[] paddedMessage;
         private string encryptedMessageString;
+        private List<byte[]> encryptedPaddedMessage;
         private byte[] encryptedMessage;
+        private string receivedMessage;
+        private byte[] receivedMessageByte;
 
         private EncryptionSize size;
         private RoundSize round;
+
+        /// <summary>
+        /// <inheritdoc/>.
+        /// </summary>
+        public PartnerSide PartnerID
+        {
+            get { return this.partnerID; }
+            set { this.partnerID = value; }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>.
+        /// </summary>
+        public string PrivateKeyString
+        {
+            get
+            {
+                return this.privateKeyString;
+            }
+
+            set
+            {
+                this.privateKeyString = value;
+                this.OnPropertyChanged(nameof(this.PrivateKeyString));
+            }
+        }
 
         /// <summary>
         /// <inheritdoc/>
@@ -42,6 +77,23 @@ namespace Crypt.Model
             {
                 this.keyString = value;
                 this.OnPropertyChanged(nameof(this.KeyString));
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>.
+        /// </summary>
+        public byte[] PrivateKey
+        {
+            get
+            {
+                return this.privateKey;
+            }
+
+            set
+            {
+                this.privateKey = value;
+                this.OnPropertyChanged(nameof(this.PrivateKey));
             }
         }
 
@@ -118,10 +170,53 @@ namespace Crypt.Model
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        public List<byte[]> EncryptedPaddedMessage
+        {
+            get { return this.encryptedPaddedMessage; }
+            set { this.encryptedPaddedMessage = value; }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public byte[] EncryptedMessage
         {
             get { return this.encryptedMessage; }
             set { this.encryptedMessage = value; }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>.
+        /// </summary>
+        public string ReceivedMessage
+        {
+            get
+            {
+                return this.receivedMessage;
+            }
+
+            set
+            {
+                this.receivedMessage = value;
+                this.OnPropertyChanged(nameof(this.ReceivedMessage));
+            }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>.
+        /// </summary>
+        public byte[] ReceivedMessageByte
+        {
+            get
+            {
+                return this.receivedMessageByte;
+            }
+
+            set
+            {
+                this.receivedMessageByte = value;
+                this.OnPropertyChanged(nameof(this.receivedMessageByte));
+            }
         }
 
         /// <summary>

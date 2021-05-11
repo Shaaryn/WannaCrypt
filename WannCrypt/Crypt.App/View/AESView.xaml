@@ -1,0 +1,413 @@
+﻿<Page x:Class="Crypt.App.View.AESView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:vm="clr-namespace:Crypt.App.ViewModel.AES"
+      mc:Ignorable="d" 
+      Title="AES View" Width="1920" Height="1020"
+      Background="#4D4D4D"
+      FontSize="15" FontFamily="Roboto"
+      ShowsNavigationUI="False">
+    <Page.Resources>
+        <vm:EncryptionViewModel x:Key="EncryptionVM"/>
+        <vm:DecryptionViewModel x:Key="DecryptionVM"/>
+    </Page.Resources>
+    <materialDesign:Transitioner SelectedIndex="0">
+        <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:1.25}">
+            <Grid>
+                <StackPanel>
+                    <!-- Page Header -->
+                    <materialDesign:Card Background="#282828" Padding="5" Margin="25" 
+                             materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                             materialDesign:ShadowAssist.ShadowEdges="Bottom, Right">
+                        <StackPanel>
+                            <Rectangle Height="5" Fill="IndianRed" Width="250"/>
+                            <Label Foreground="#FFBFBFBF" FontSize="30" FontFamily="Copperplate Gothic Bold"
+                       HorizontalAlignment="Center">
+                                WannaCrypt
+                            </Label>
+                            <TextBlock Foreground="#FFBFBFBF" Margin="25,0,0,0">
+                    Welcome to the
+                    <Run Text="AES Encryption" Foreground="IndianRed"/>
+                    page!
+                            </TextBlock>
+                            <TextBlock Foreground="#FFBFBFBF" Margin="25,5,0,0" TextWrapping="Wrap">
+                    On this page you are able to
+                    <Run Text="encrypt" Foreground="IndianRed"/>
+                    and 
+                    <Run Text="decrypt" Foreground="IndianRed"/>
+                    text messages and binary files. Both text and file encryption uses the AES encryption, that has a fixed
+                    block size. However, you 
+                    <Run Text="have to decide" FontWeight="Bold"/>
+                    the size of the key you want to use. 
+                    After you have choosen a key size, you can generate a random key or insert your own
+                    to the corresponding field. 
+                    <Run Text="Don't forget to" FontWeight="Bold"/>
+                    to tick the "File" checkbox when encrypting files.<LineBreak />
+                    After all set up you can provide your text message or file and then simply press the encrypt or
+                    decrypt button!
+                            </TextBlock>
+                            <TextBlock Foreground="#FFBFBFBF" Margin="25,5,0,0">
+                    <Run Text="Have fun crypting!:)" Foreground="IndianRed"/>
+                            </TextBlock>
+                            <Rectangle Height="5" Margin="20,5,0,5" Fill="IndianRed" Width="133" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <!-- Page Content splitter-->
+                    <Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Encryption side (left) -->
+                            <Grid Width="900" DataContext="{StaticResource EncryptionVM}" Margin="50,0,10,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <!-- Section Header -->
+                                <materialDesign:Card Grid.Row="0"
+                                     Background="#282828" Padding="5" Margin="5"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="LockOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                               HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            Encryption
+                                        </Label>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <!-- Configuration -->
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Section Header -->
+                                    <materialDesign:Card Grid.Column="0"
+                                         Background="#282828" Padding="5" Margin="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="CogOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                                <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    Configuration
+                                                </Label>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                    <!-- Property - Key size -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                Margin="0,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Key size:
+                                        </Label>
+                                        <ComboBox Foreground="Black" Margin="5,0,0,0"
+                                  Width="100"
+                                  ItemsSource="{Binding EncryptSizes}" SelectedItem="{Binding CryptSize}" />
+                                    </StackPanel>
+                                    <!-- Property - Block size-->
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal"
+                                Margin="5,0,0,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Block size:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                   Width="100" VerticalAlignment="Center"
+                                   IsEnabled="False">
+                            128 bits
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                                <!-- Actual content - Text -->
+                                <StackPanel Grid.Row="2">
+                                    <!-- Property - Message -->
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding EncryptTextObject.Message}"
+                             materialDesign:HintAssist.Hint="Message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             VerticalScrollBarVisibility="Auto"
+                             Height="100" Margin="25,10,25,10" TextWrapping="Wrap" />
+                                    <!-- Property - Key -->
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding KeyStringEncryption}"
+                             materialDesign:HintAssist.Hint="Hex Key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             VerticalScrollBarVisibility="Auto"
+                             Margin="25,10,25,10" TextWrapping="Wrap" />
+                                    <!-- Property - Encrypted Message -->
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding EncryptTextObject.EncryptedMessageString}"
+                             materialDesign:HintAssist.Hint="Encrypted Message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             VerticalScrollBarVisibility="Auto"
+                             Height="100" Margin="25,10,25,10" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <!-- Actual content - File -->
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- File selection -->
+                                    <materialDesign:Card Grid.Column="0" Background="#282828" 
+                                         Width="250" Height="125" Margin="25,10,25,25" Padding="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding EncryptFileObject.FileName}"
+                                       Foreground="#FFBFBFBF"
+                                       Margin="10" TextAlignment="Center" TextWrapping="Wrap"/>
+                                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                    IsEnabled="{Binding IsBrowseEnable}"
+                                    Width="100" Margin="5" Tag="encrypt"
+                                    Click="OpenFileExplorerToBrowse">
+                                                Browse
+                                            </Button>
+                                            <ProgressBar Value="{Binding FileEncryptionProgressValue}"
+                                         Height="10" Width="175" Margin="10"/>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                    <StackPanel Grid.Column="1">
+                                        <!-- File location -->
+                                        <materialDesign:Card Background="#282828" 
+                                         Width="250" Height="125" Margin="25,10,25,25" Padding="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <!-- IsEnabled="{Binding IsBrowseEnable}" -->
+                                                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                        IsEnabled="False"
+                                        Width="125" Margin="5"
+                                        Click="OpenEncryptResultDirectory">
+                                                    Open Location
+                                                </Button>
+                                                <CheckBox x:Name="isFileEncrypt" Foreground="#FFBFBFBF"
+                                          Width="55" Height="30" HorizontalAlignment="Center">
+                                                    File
+                                                </CheckBox>
+                                            </StackPanel>
+                                        </materialDesign:Card>
+                                    </StackPanel>
+                                </Grid>
+                                <!-- Control - Buttons -->
+                                <materialDesign:Card Grid.Row="4"
+                                     Background="#282828" Padding="5" Margin="5"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <!-- Control - Encryption Button-->
+                                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                            Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Command="{Binding EncryptCommand}" Click="DecideEncryptionType"
+                            IsEnabled="{Binding IsBrowseEnable}">
+                                            Encrypt
+                                        </Button>
+                                        <!-- Control - Random Key Button -->
+                                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="125"
+                            Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Command="{Binding GenerateKeyCommand}" Click="DecideEncryptionType">
+                                            Generate key
+                                        </Button>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Grid>
+                            <!-- Decryption side (right) -->
+                            <Grid Width="900" DataContext="{StaticResource DecryptionVM}" Margin="10,0,50,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <!-- Section Header -->
+                                <materialDesign:Card Grid.Row="0"
+                                     Background="#282828" Padding="5" Margin="5"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="LockOpenVariantOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                        <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                               HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            Decryption
+                                        </Label>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                                <!-- Configuration -->
+                                <Grid Grid.Row="1" Margin="25,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Section Header -->
+                                    <materialDesign:Card Grid.Column="0"
+                                         Background="#282828" Padding="5" Margin="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="CogOutline" Foreground="IndianRed"
+                                                         Width="25" Height="25"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                                <Label Foreground="#FFBFBFBF" FontSize="20" FontWeight="Bold" Margin="10,10,10,10"
+                                       HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    Configuration
+                                                </Label>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                    <!-- Property - Key size -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                Margin="0,0,5,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Key size:
+                                        </Label>
+                                        <ComboBox Foreground="Black" Margin="5,0,0,0"
+                                  Width="100"
+                                  ItemsSource="{Binding EncryptSizes}" SelectedItem="{Binding CryptSize}" />
+                                    </StackPanel>
+                                    <!-- Property - Block size-->
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal"
+                                Margin="5,0,0,0">
+                                        <Label Foreground="#FFBFBFBF"
+                               VerticalAlignment="Center">
+                                            Block size:
+                                        </Label>
+                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                   Width="100" VerticalAlignment="Center"
+                                   IsEnabled="False">
+                            128 bits
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <!-- Control - Config Copy -->
+                                    <Button Grid.Column="4" Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Click="CopyConfiguration">
+                                        Copy
+                                    </Button>
+                                </Grid>
+                                <!-- Actual content - Text -->
+                                <StackPanel Grid.Row="2">
+                                    <!-- Property - Message -->
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding DecryptTextObject.EncryptedMessageString}"
+                             materialDesign:HintAssist.Hint="Encrypted Message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             VerticalScrollBarVisibility="Auto"
+                             Height="100" Margin="25,10,25,10" TextWrapping="Wrap" />
+                                    <!-- Property - Key -->
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding KeyStringDecryption}"
+                             materialDesign:HintAssist.Hint="Hex Key"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             VerticalScrollBarVisibility="Auto"
+                             Margin="25,10,25,10" TextWrapping="Wrap" />
+                                    <!-- Property - Encrypted Message -->
+                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Text="{Binding DecryptTextObject.Message}"
+                             materialDesign:HintAssist.Hint="Decrypted Message"
+                             materialDesign:HintAssist.Background="#4D4D4D"
+                             VerticalScrollBarVisibility="Auto"
+                             Height="100" Margin="25,10,25,10" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <!-- Actual content - File -->
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- File selection -->
+                                    <materialDesign:Card Grid.Column="0" Background="#282828" 
+                                         Width="250" Height="125" Margin="25,10,25,25" Padding="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding DecryptFileObject.FileName}"
+                                       Foreground="#FFBFBFBF"
+                                       Margin="10" TextAlignment="Center" TextWrapping="Wrap"/>
+                                            <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                    IsEnabled="{Binding IsBrowseEnable}"
+                                    Width="100" Margin="5" Tag="decrypt"
+                                    Click="OpenFileExplorerToBrowse">
+                                                Browse
+                                            </Button>
+                                            <ProgressBar Value="{Binding FileDecryptionProgressValue}"
+                                         Height="10" Width="175" Margin="10"/>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                    <StackPanel Grid.Column="1">
+                                        <!-- File location -->
+                                        <materialDesign:Card Background="#282828" 
+                                         Width="250" Height="125" Margin="25,10,25,25" Padding="5"
+                                         materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                         materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <!-- IsEnabled="{Binding IsBrowseEnable}" -->
+                                                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                                        IsEnabled="False"
+                                        Width="125" Margin="5"
+                                        Click="OpenDecryptResultDirectory">
+                                                    Open Location
+                                                </Button>
+                                                <CheckBox x:Name="isFileDecrypt" Foreground="#FFBFBFBF"
+                                          Width="55" Height="30" HorizontalAlignment="Center">
+                                                    File
+                                                </CheckBox>
+                                            </StackPanel>
+                                        </materialDesign:Card>
+                                    </StackPanel>
+                                </Grid>
+                                <!-- Control - Buttons -->
+                                <materialDesign:Card Grid.Row="4"
+                                     Background="#282828" Padding="5" Margin="5"
+                                     materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                     materialDesign:ShadowAssist.ShadowEdges="Bottom, Right, Left">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <!-- Control - Encryption Button-->
+                                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="100"
+                            Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Command="{Binding DecryptCommand}" Click="DecideEncryptionType"
+                            IsEnabled="{Binding IsBrowseEnable}">
+                                            Decrypt
+                                        </Button>
+                                        <!-- Control - Random Key Button -->
+                                        <Button Style="{StaticResource MaterialDesignRaisedButton}" Width="175"
+                            Margin="25,5,5,5" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                            Click="CopyKey">
+                                            Copy Encryption Key
+                                        </Button>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                <Rectangle Height="60" Fill="#282828"
+                   VerticalAlignment="Bottom"/>
+            </Grid>
+        </materialDesign:TransitionerSlide>
+    </materialDesign:Transitioner>
+</Page>
