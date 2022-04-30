@@ -9,6 +9,7 @@ namespace Crypt.App.ViewModel.DH
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
+    using AzureControl;
     using Crypt.Logic.AES;
     using Crypt.Logic.DH;
     using Crypt.Model.DH;
@@ -135,6 +136,11 @@ namespace Crypt.App.ViewModel.DH
         public ICommand ReceiveMessageFromLeftToRight { get; set; }
 
         /// <summary>
+        /// Serilizes the whole PublicSpace and pushes it to the Azure Blob.
+        /// </summary>
+        public ICommand SerilizeAndPush { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SecretConversationViewModel"/> class.
         /// </summary>
         public SecretConversationViewModel()
@@ -155,6 +161,8 @@ namespace Crypt.App.ViewModel.DH
 
             RelayEncryptionCommand();
             RelayDecryptionCommand();
+
+            this.SerilizeAndPush = new RelayCommand(() => this.publicSpace.SerilizeAndPush());
         }
 
         private void RelayGenerateRandomKeyCommand()

@@ -6,7 +6,12 @@
 
 namespace Crypt.Model.DH
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
+    using AzureControl;
     using Crypt.Model.Interfaces;
 
     /// <summary>
@@ -177,6 +182,61 @@ namespace Crypt.Model.DH
                 this.rightPartyPublicMessageByte = value;
                 this.OnPropertyChanged(nameof(this.RightPartyPublicMessageByte));
             }
+        }
+
+        public void SerilizePublicSpace(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            StreamWriter fs = new StreamWriter(path);
+
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("##### Used large prime: " + this.LargePrime);
+            fs.WriteLine("##### Small integer: " + this.SmallInteger);
+            fs.WriteLine("############################################################");
+            fs.WriteLine("########## Public Left");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("##### 1 # Public left key (string): ");
+            fs.WriteLine("#####" + this.LeftPartyPublicKeyString);
+            fs.WriteLine("##### 2 # Public left key (byte[]): ");
+            fs.WriteLine("##### " + Encoding.Default.GetString(this.LeftPartyPublicKey));
+            fs.WriteLine("##### 3 # Public left message (string): ");
+            fs.WriteLine("#####" + this.LeftPartyPublicMessage);
+            fs.WriteLine("##### 4 # Public left message (byte[]): ");
+            fs.WriteLine("##### " + Encoding.Default.GetString(this.LeftPartyPublicMessageByte));
+            fs.WriteLine("############################################################");
+            fs.WriteLine("########## Public Right");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("##### 1 # Public right key (string): ");
+            fs.WriteLine("#####" + this.RightPartyPublicKeyString);
+            fs.WriteLine("##### 2 # Public right key (byte[]): ");
+            fs.WriteLine("##### " + Encoding.Default.GetString(this.RightPartyPublicKey));
+            fs.WriteLine("##### 3 # Public right message (string): ");
+            fs.WriteLine("#####" + this.RightPartyPublicMessage);
+            fs.WriteLine("##### 4 # Public right message (byte[]): ");
+            fs.WriteLine("##### " + Encoding.Default.GetString(this.RightPartyPublicMessageByte));
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+            fs.WriteLine("############################################################");
+
+            fs.Close();
+        }
+
+        public void SerilizeAndPush()
+        {
+            string path = Directory.GetCurrentDirectory() + $"{this.GetType().Name}.txt";
+
+            this.SerilizePublicSpace(path);
+            AzureController.UploadFile(this.GetType().Name, path, "publicspace");
         }
 
         /// <summary>

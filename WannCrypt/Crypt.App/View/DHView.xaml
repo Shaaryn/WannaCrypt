@@ -289,59 +289,71 @@
                             </materialDesign:Card>
                             <!-- Confugration Subsection -->
                             <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <!-- Subsection Header -->
-                                <StackPanel Grid.Column="0" HorizontalAlignment="Center" >
-                                    <!-- Property - Key size -->
-                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
-                                        <Label Foreground="#FFBFBFBF" FontSize="16"
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Subsection Header -->
+                                    <StackPanel Grid.Column="0" HorizontalAlignment="Center" >
+                                        <!-- Property - Key size -->
+                                        <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                            <Label Foreground="#FFBFBFBF" FontSize="16"
                                    VerticalAlignment="Center">
-                                            Key size:
-                                        </Label>
-                                        <ComboBox Foreground="Black" Margin="5,0,0,0"
+                                                Key size:
+                                            </Label>
+                                            <ComboBox Foreground="Black" Margin="5,0,0,0"
                                   Width="100"
                                   ItemsSource="{Binding EncryptSizes}" SelectedItem="{Binding CryptSize}" />
-                                    </StackPanel>
-                                    <!-- Property - Block size-->
-                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
-                                        <Label Foreground="#FFBFBFBF"
+                                        </StackPanel>
+                                        <!-- Property - Block size-->
+                                        <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                            <Label Foreground="#FFBFBFBF"
                                VerticalAlignment="Center">
-                                            Block size:
-                                        </Label>
-                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                                Block size:
+                                            </Label>
+                                            <TextBlock Foreground="LightGray" Margin="5,0,0,0"
                                    Width="100" VerticalAlignment="Center"
                                    IsEnabled="False">
                             128 bits
-                                        </TextBlock>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" HorizontalAlignment="Center" >
-                                    <!-- Property - Public DH key (large af prime)-->
-                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
-                                        <Label Foreground="#FFBFBFBF"
+                                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" >
+                                        <!-- Property - Public DH key (large af prime)-->
+                                        <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                            <Label Foreground="#FFBFBFBF"
                                VerticalAlignment="Center">
-                                            Public prime:
-                                        </Label>
-                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0" Width="100"
+                                                Public prime:
+                                            </Label>
+                                            <TextBlock Foreground="LightGray" Margin="5,0,0,0" Width="100"
                                        VerticalAlignment="Center">
                             2147483423
-                                        </TextBlock>
-                                    </StackPanel>
-                                    <!-- Property - Public BH base (tiny prime) -->
-                                    <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
-                                        <Label Foreground="#FFBFBFBF"
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <!-- Property - Public BH base (tiny prime) -->
+                                        <StackPanel Orientation="Horizontal" Height="50" Margin="5,0,5,0">
+                                            <Label Foreground="#FFBFBFBF"
                                    VerticalAlignment="Center">
-                                            Public base:
-                                        </Label>
-                                        <TextBlock Foreground="LightGray" Margin="5,0,0,0"
+                                                Public base:
+                                            </Label>
+                                            <TextBlock Foreground="LightGray" Margin="5,0,0,0"
                                    Width="75" VerticalAlignment="Center">
                             3
-                                        </TextBlock>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
+                                </Grid>
+                                <Button Grid.Row="1" Style="{StaticResource MaterialDesignRaisedButton}" 
+                                    Width="150" Margin="25,5,5,5" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Command="{Binding SerilizeAndPush}">
+                                    Serilize and Push
+                                </Button>
                             </Grid>
                             <!-- Separator -->
                             <Rectangle Grid.Row="2" Margin="100,0,100,0" Fill="IndianRed"/>
